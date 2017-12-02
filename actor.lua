@@ -185,7 +185,7 @@ function actor:update_location(dt)
 	-- if hit then spark_data.spawn("tripop", self.color, mx + self.w/2, my + self.h/2, 100 * nx, 100 * ny, 0, 1, 1) end
 
 	if hit then
-		if self.dy > 200 and not self.touching_floor then
+		if ny < -0.5 and self.dy > 200 and not self.touching_floor then
 			spark_data.spawn("jumpburst", self.color, mx + self.w/2, my + self.h, 0, 0, 0, 1, 1)
 			audio.play('land')
 		end
@@ -218,10 +218,6 @@ function actor:update_location(dt)
 	if self:is_touching_floor() then
 		if not self.touching_floor then
 			self.double_jumps = self.double_jumps_max
-			-- if dash_x == 0 then
-			-- 	spark_data.spawn("jumpburst", self.color, self.x + self.w/2, self.y + self.h, 0, 0, 0, 1, 1)
-			-- 	audio.play('land')
-			-- end
 		end
 		self.touching_floor = true
 	else
