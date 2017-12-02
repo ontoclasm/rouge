@@ -59,13 +59,13 @@ function map:fill_main()
 	end
 
 	-- debug stuff
-	self:set_block("slope_45", 26, 12)
-	self:set_block("slope_45", 27, 11)
-	self:set_block("slope_45", 28, 10)
-	self:set_block_rect("wall", 29, 10, 3, 3)
-	self:set_block("slope_-45", 32, 10)
-	self:set_block("slope_-45", 33, 11)
-	self:set_block("slope_-45", 34, 12)
+	-- self:set_block("slope_45", 26, 12)
+	-- self:set_block("slope_45", 27, 11)
+	-- self:set_block("slope_45", 28, 10)
+	-- self:set_block_rect("wall", 29, 10, 3, 3)
+	-- self:set_block("slope_-45", 32, 10)
+	-- self:set_block("slope_-45", 33, 11)
+	-- self:set_block("slope_-45", 34, 12)
 
 	self:set_block("slope_45_a", 8, 12)
 	self:set_block("slope_45_a", 9, 11)
@@ -79,6 +79,13 @@ function map:fill_main()
 	self:set_block("slope_-45_b", 14, 12)
 	self:set_block("slope_-45_b", 13, 11)
 	self:set_block("slope_-45_b", 12, 10)
+
+	self:set_block("slope_23_a", 26, 12)
+	self:set_block("slope_23_a", 28, 11)
+	self:set_block("slope_23_a", 30, 10)
+	self:set_block("slope_23_b", 27, 12)
+	self:set_block("slope_23_b", 29, 11)
+	self:set_block("slope_23_b", 31, 10)
 
 	self.death_line = (self.height - 1) * 32 -- this is two blocks above the bottom
 end

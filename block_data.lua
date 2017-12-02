@@ -1,5 +1,15 @@
 local block_data = {}
 
+default_box_half_multipliers = { u=1, d=1, l=1, r=1 }
+
+function block_data.get_box_half_multipliers(type)
+	if block_data[type].box_half_multipliers then
+		return block_data[type].box_half_multipliers
+	else
+		return default_box_half_multipliers
+	end
+end
+
 block_data["void"] =
 {
 	hp = 0,
@@ -52,6 +62,7 @@ block_data["slope_45_a"] =
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = -1,
 	slope_y_offset = 16,
+	box_half_multipliers = { u = 0, d = 1, l = 0, r = 1 },
 }
 
 block_data["slope_45_b"] =
@@ -72,6 +83,7 @@ block_data["slope_-45_a"] =
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = 1,
 	slope_y_offset = 16,
+	box_half_multipliers = { u = 0, d = 1, l = 1, r = 0 },
 }
 
 block_data["slope_-45_b"] =
@@ -82,6 +94,27 @@ block_data["slope_-45_b"] =
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = 1,
 	slope_y_offset = -16,
+}
+
+block_data["slope_23_a"] =
+{
+	hp = 0,
+	breakable = false,
+	collision_type = "slope",
+	collision_dirs = { u = false, d = true, l = false, r = true},
+	slope = -0.5,
+	slope_y_offset = 8,
+	box_half_multipliers = { u = 0, d = 1, l = 1, r = 1 },
+}
+
+block_data["slope_23_b"] =
+{
+	hp = 0,
+	breakable = false,
+	collision_type = "slope",
+	collision_dirs = { u = false, d = true, l = false, r = true},
+	slope = -0.5,
+	slope_y_offset = -8,
 }
 
 return block_data

@@ -71,22 +71,25 @@ end
 
 local rx, ry, norm
 
-function physics.collision_aabb_sweep_slope(a, b, slope, slope_y_offset, vx, vy)
+function physics.collision_aabb_sweep_slope(a, b, vx, vy, slope, slope_y_offset, bhm)
 	ax, bx =  a.x + a.w/2, b.x + b.w/2
-	pad_x = b.w/2 + a.w/2
 	sign_x = mymath.sign(vx)
 	scale_x = 1 / vx
 
 	ay, by =  a.y + a.h/2, b.y + b.h/2
-	pad_y = b.h/2 + a.h/2
 	sign_y = mymath.sign(vy)
 	scale_y = 1 / vy
 
 	if vx ~= 0 then
-		near_time_x = (bx - sign_x * (pad_x) - ax) * scale_x
-		far_time_x = (bx + sign_x * (pad_x) - ax) * scale_x
+		if sign_x == 1 then
+			near_time_x = (bx - ax - b.w * bhm.l / 2 - a.w/2) * scale_x
+			far_time_x = (bx - ax + b.w * bhm.r / 2 + a.w/2) * scale_x
+		else
+			near_time_x = (bx - ax + b.w * bhm.r / 2 + a.w/2) * scale_x
+			far_time_x = (bx - ax - b.w * bhm.l / 2 - a.w/2) * scale_x
+		end
 	else
-		if ax > bx - pad_x and ax < bx + pad_x then
+		if ax > bx - b.w * bhm.l / 2 - a.w/2 and ax < bx + b.w * bhm.r / 2 + a.w/2 then
 			near_time_x, far_time_x = -9999, 9999
 		else
 			return
@@ -94,10 +97,15 @@ function physics.collision_aabb_sweep_slope(a, b, slope, slope_y_offset, vx, vy)
 	end
 
 	if vy ~= 0 then
-		near_time_y = (by - sign_y * (pad_y) - ay) * scale_y
-		far_time_y = (by + sign_y * (pad_y) - ay) * scale_y
+		if sign_y == 1 then
+			near_time_y = (by - ay - b.h * bhm.u / 2 - a.h/2) * scale_y
+			far_time_y = (by - ay + b.h * bhm.d / 2 + a.h/2) * scale_y
+		else
+			near_time_y = (by - ay + b.h * bhm.d / 2 + a.h/2) * scale_y
+			far_time_y = (by - ay - b.h * bhm.u / 2 - a.h/2) * scale_y
+		end
 	else
-		if ay > by - pad_y and ay < by + pad_y then
+		if ay > by - b.h * bhm.u / 2 - a.h/2 and ay < by + b.h * bhm.d / 2 + a.h/2 then
 			near_time_y, far_time_y = -9999, 9999
 		else
 			return
@@ -215,8 +223,8 @@ function physics.map_collision_aabb_sweep(a, vx, vy)
 				box = map.bounding_box(i, j)
 
 				if block_data[block_type].slope then
-					hx, hy, ht, nx, ny = physics.collision_aabb_sweep_slope(a, box, block_data[block_type].slope,
-																			block_data[block_type].slope_y_offset, vx, vy)
+					hx, hy, ht, nx, ny = physics.collision_aabb_sweep_slope(a, box, vx, vy, block_data[block_type].slope,
+																			block_data[block_type].slope_y_offset, block_data.get_box_half_multipliers(block_type))
 				else
 					hx, hy, ht, nx, ny = physics.collision_aabb_sweep(a, box, vx, vy)
 				end
@@ -276,8 +284,8 @@ function physics.map_collision_test(a)
 				box = map.bounding_box(i, j)
 
 				if block_data[block_type].slope then
-					ijhx, ijhy, ijht, ijnx, ijny = physics.collision_aabb_sweep_slope(a, box, block_data[block_type].slope,
-																					  block_data[block_type].slope_y_offset, vx, vy)
+					ijhx, ijhy, ijht, ijnx, ijny = physics.collision_aabb_sweep_slope(a, box, vx, vy, block_data[block_type].slope,
+																					  block_data[block_type].slope_y_offset, block_data.get_box_half_multipliers(block_type))
 				else
 					ijhx, ijhy, ijht, ijnx, ijny = physics.collision_aabb_sweep(a, box, vx, vy)
 				end

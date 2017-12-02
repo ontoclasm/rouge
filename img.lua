@@ -19,6 +19,8 @@ function img.setup()
 	img.nq("slope_45_b",		 8,	 0)
 	img.nq("slope_-45_a",		 9,	 0)
 	img.nq("slope_-45_b",		10,	 0)
+	img.nq("slope_23_a",		11,	 0)
+	img.nq("slope_23_b",		12,	 0)
 
 	img.nq_sprite("player", 	 0,	 1)
 	img.nq_sprite("demon",		 0,	 3)

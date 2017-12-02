@@ -155,8 +155,7 @@ function actor:update_location(dt)
 			else
 				self.dy = self.dy + (gravity * dt)
 			end
-			if self.controls.jump == true and (self.flies or self.double_jumps > 0)
-			   and not self:check_status("dash_cooldown") then
+			if self.controls.jump == true and (self.flies or self.double_jumps > 0) and not self:check_status("dash_cooldown") then
 				self:jump()
 				if not self.flies then
 					spark_data.spawn("dashburst", self.color, self.x + self.w/2, self.y + self.h/2, 0, 100, math.pi * 3 / 2, 1, 1)
