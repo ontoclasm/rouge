@@ -127,7 +127,7 @@ function love.draw()
 	end
 
 	img.update_tileset_batch()
-	love.graphics.draw(img.tileset_batch, -(camera.x%32), -(camera.y%32))
+	love.graphics.draw(img.tileset_batch, -(camera.x % 32), -(camera.y % 32))
 
 	for _,v in pairs(enemies) do
 		v:draw()

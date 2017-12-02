@@ -16,11 +16,11 @@ function map:new(w, h)
 end
 
 function map.grid_at_pos(px)
-	return math.floor(px/img.tile_size)
+	return math.floor(px / img.tile_size)
 end
 
 function map.bounding_box(x, y)
-	return {x = img.tile_size*x, y = img.tile_size*y, w = img.tile_size, h = img.tile_size}
+	return {x = img.tile_size * x, y = img.tile_size * y, w = img.tile_size, h = img.tile_size}
 end
 
 function map.orth_normal_to_dir(nx, ny)
@@ -31,7 +31,7 @@ function map.orth_normal_to_dir(nx, ny)
 end
 
 function map:in_bounds(x, y)
-	return x>=1 and x<=self.width and y>=1 and y<=self.height
+	return x >= 1 and x <= self.width and y >= 1 and y <= self.height
 end
 
 function map:set_block(block, x, y)
@@ -42,8 +42,8 @@ function map:set_block(block, x, y)
 end
 
 function map:set_block_rect(block, x, y, w, h)
-	for i = x, x+w-1 do
-		for j = y, y+h-1 do
+	for i = x, x + w - 1 do
+		for j = y, y + h - 1 do
 			self:set_block(block, i, j)
 		end
 	end
@@ -97,9 +97,9 @@ function map:fill_main()
 end
 
 function map:fill_z()
-	for x=1, self.width do
-		for y=1, self.height do
-			if (x==1 and y<=4) or y == 4 or (x==7 and y>=4) then
+	for x = 1, self.width do
+		for y = 1, self.height do
+			if (x == 1 and y <= 4) or y == 4 or (x == 7 and y >= 4) then
 				self:set_block("wall", x, y)
 			end
 		end
