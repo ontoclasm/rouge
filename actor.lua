@@ -185,7 +185,7 @@ function actor:update_location(dt)
 	-- if hit then spark_data.spawn("tripop", self.color, mx + self.w/2, my + self.h/2, 100 * nx, 100 * ny, 0, 1, 1) end
 
 	if hit then
-		if ny < 0 and self.dy > 100 and not self.touching_floor then
+		if self.dy > 200 and not self.touching_floor then
 			spark_data.spawn("jumpburst", self.color, mx + self.w/2, my + self.h, 0, 0, 0, 1, 1)
 			audio.play('land')
 		end
@@ -200,6 +200,7 @@ function actor:update_location(dt)
 			hit, mx, my, m_time, nx, ny = physics.map_collision_aabb_sweep({x = mx, y = my, h = self.h, w = self.w},
 																		   self.dx * dt * (1 - m_time), self.dy * dt * (1 - m_time))
 			if hit then
+
 				r = self.dx * ny - self.dy * nx
 
 				self.dx = r * ny
@@ -210,22 +211,6 @@ function actor:update_location(dt)
 
 	self.x = mx
 	self.y = my
-
-	-- tx, ty, shunt_tx, shunt_ty = physics.map_collision(self, dt)
-
-	-- if shunt_tx ~= 0 then
-	-- 	self.dx = 0
-	-- else
-	-- 	self.dx = self.dx + tx / dt
-	-- end
-	-- if shunt_ty ~= 0 then
-	-- 	self.dy = 0
-	-- else
-	-- 	self.dy = self.dy + ty / dt
-	-- end
-
-	-- self.x = self.x + shunt_tx + self.dx * dt
-	-- self.y = self.y + shunt_ty + self.dy * dt
 
 	-- check for stuff to do at our new position
 	if self.y >= mainmap.death_line then self:die() end

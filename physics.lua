@@ -229,7 +229,7 @@ function physics.map_collision_aabb_sweep(a, vx, vy)
 					hx, hy, ht, nx, ny = physics.collision_aabb_sweep(a, box, vx, vy)
 				end
 
-				--  and not mainmap:grid_blocks_dir(i + nx, j + ny, map.orth_normal_to_dir(-nx, -ny))
+				-- and not mainmap:grid_blocks_dir(i + math.ceil(nx), j + math.ceil(ny), map.orth_normal_to_dir(-nx, -ny))
 				if ht and ht < mt then
 					if (nx ~= 0 and ny ~= 0) or not mainmap:grid_blocks_dir(i + nx, j + ny, map.orth_normal_to_dir(-nx, -ny)) then
 						hit = {"block", i, j}
