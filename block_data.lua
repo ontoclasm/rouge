@@ -31,7 +31,7 @@ block_data["slope_45"] =
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = -1,
-	slope_y_offset = 1,
+	slope_y_offset = 0,
 }
 
 block_data["slope_-45"] =
@@ -41,7 +41,7 @@ block_data["slope_-45"] =
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = true, r = false},
 	slope = 1,
-	slope_y_offset = 1,
+	slope_y_offset = 0,
 }
 
 block_data["slope_45_a"] =

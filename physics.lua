@@ -63,8 +63,8 @@ function physics.collision_aabb_sweep(a, b, vx, vy)
 		ny = -sign_y
 	end
 
-	hit_x = a.x + mymath.abs_floor(hit_time * vx + 0.001 * sign_x) + nx
-	hit_y = a.y + mymath.abs_floor(hit_time * vy + 0.001 * sign_y) + ny
+	hit_x = a.x + hit_time * vx - 0.001 * sign_x
+	hit_y = a.y + hit_time * vy - 0.001 * sign_y
 
 	return hit_x, hit_y, hit_time, nx, ny
 end
@@ -169,8 +169,8 @@ function physics.collision_aabb_sweep_slope(a, b, slope, slope_y_offset, vx, vy)
 		nx = slope / norm
 		ny = - 1 / norm
 
-		hit_x = a.x + mymath.abs_floor(hit_time * vx + 0.001 * sign_x)
-		hit_y = a.y + mymath.abs_floor(hit_time * vy + 0.001 * sign_y) - 1
+		hit_x = a.x + hit_time * vx - 0.001 * sign_x
+		hit_y = a.y + hit_time * vy - 0.001 * sign_y
 	else
 		if near_time_x > near_time_y then
 			nx = -sign_x
@@ -180,8 +180,8 @@ function physics.collision_aabb_sweep_slope(a, b, slope, slope_y_offset, vx, vy)
 			ny = -sign_y
 		end
 
-		hit_x = a.x + mymath.abs_floor(hit_time * vx + 0.001 * sign_x) + nx
-		hit_y = a.y + mymath.abs_floor(hit_time * vy + 0.001 * sign_y) + ny
+		hit_x = a.x + hit_time * vx - 0.001 * sign_x
+		hit_y = a.y + hit_time * vy - 0.001 * sign_y
 	end
 
 	return hit_x, hit_y, hit_time, nx, ny
@@ -226,10 +226,20 @@ function physics.map_collision_aabb_sweep(a, vx, vy)
 					if (nx ~= 0 and ny ~= 0) or not mainmap:grid_blocks_dir(i + nx, j + ny, map.orth_normal_to_dir(-nx, -ny)) then
 						hit = {"block", i, j}
 						mt = ht
-						mx = math.floor(hit_x)
-						my = math.floor(hit_y)
+						mx = hit_x
+						my = hit_y
 						mnx = nx
 						mny = ny
+						if nx > 0 then
+							mx = math.ceil(mx)
+						elseif nx < 0 then
+							mx = math.floor(mx)
+						end
+						if ny > 0 then
+							my = math.ceil(my)
+						elseif ny < 0 then
+							my = math.floor(my)
+						end
 					end
 				end
 			end
@@ -237,7 +247,7 @@ function physics.map_collision_aabb_sweep(a, vx, vy)
 	end
 
 	if not hit then
-		mx, my = a.x + mymath.abs_floor(vx), a.y + mymath.abs_floor(vy)
+		mx, my = a.x + vx, a.y + vy
 		mnx, mny = 0, 0
 	end
 
@@ -274,10 +284,20 @@ function physics.map_collision_test(a)
 
 				if ijht and ijht < mt then
 					mt = hit_time
-					mx = math.floor(ijhx)
-					my = math.floor(ijhy)
+					mx = ijhx
+					my = ijhy
 					mnx = nx
 					mny = ny
+					if mnx > 0 then
+							mx = math.ceil(mx)
+						elseif nx < 0 then
+							mx = math.floor(mx)
+						end
+						if mny > 0 then
+							my = math.ceil(my)
+						elseif ny < 0 then
+							my = math.floor(my)
+						end
 				end
 			end
 		end
@@ -306,7 +326,7 @@ function physics.map_collision_test(a)
 	love.graphics.line(a.x + a.w/2 - camera.x, a.y + a.h/2 - camera.y, mx + a.w/2 - camera.x, my + a.h/2 - camera.y)
 	love.graphics.rectangle('line', mx - camera.x, my - camera.y, a.w, a.h)
 	love.graphics.setColor(color.white)
-	love.graphics.rectangle('line', a.x - camera.x, a.y - camera.y, a.w, a.h)
+	-- love.graphics.rectangle('line', a.x - camera.x, a.y - camera.y, a.w, a.h)
 	if mt < 1 then
 		love.graphics.line(mx + a.w/2 - camera.x, my + a.h/2 - camera.y, mx + a.w/2 - camera.x + mnx * 8, my + a.h/2 - camera.y + mny * 8)
 		love.graphics.line(mx + a.w/2 - camera.x, my + a.h/2 - camera.y, mx + a.w/2 - camera.x + rvx, my + a.h/2 - camera.y + rvy)

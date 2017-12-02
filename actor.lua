@@ -114,19 +114,6 @@ function actor:update_location(dt)
 		dash_x = 0
 	end
 
-	if self:is_touching_floor() then
-		if not self.touching_floor then
-			self.double_jumps = self.double_jumps_max
-			if dash_x == 0 then
-				spark_data.spawn("jumpburst", self.color, self.x + self.w/2, self.y + self.h, 0, 0, 0, 1, 1)
-				audio.play('land')
-			end
-		end
-		self.touching_floor = true
-	else
-		self.touching_floor = false
-	end
-
 	if dash_x == 1 then
 		self.dx = self.top_speed + (self.dash_speed - self.top_speed) * ((self.status.dash_right - ctime) / self.dash_dur)
 		self.dy = 0
@@ -139,7 +126,12 @@ function actor:update_location(dt)
 		if self.touching_floor then
 			-- on the ground
 
-			self.dx = mymath.abs_subtract(self.dx + (self.walk_accel * key_x * dt), self.walk_friction * dt)
+			if key_x == 0 then
+				self.dx = mymath.abs_subtract(self.dx, self.walk_friction * dt)
+				self.dy = mymath.abs_subtract(self.dy, self.walk_friction * dt)
+			else
+				self.dx = self.dx + (self.walk_accel * key_x * dt)
+			end
 
 			-- ledge gravity
 			if (self.dx < 0 and key_x ~= -1 and self:is_on_ledge_left()) or (self.dx > 0 and key_x ~= 1 and self:is_on_ledge_right()) then
@@ -194,6 +186,11 @@ function actor:update_location(dt)
 	-- if hit then spark_data.spawn("tripop", self.color, mx + self.w/2, my + self.h/2, 100 * nx, 100 * ny, 0, 1, 1) end
 
 	if hit then
+		if ny < 0 and self.dy > 100 and not self.touching_floor then
+			spark_data.spawn("jumpburst", self.color, mx + self.w/2, my + self.h, 0, 0, 0, 1, 1)
+			audio.play('land')
+		end
+
 		r = self.dx * ny - self.dy * nx
 
 		self.dx = r * ny
@@ -233,6 +230,19 @@ function actor:update_location(dt)
 
 	-- check for stuff to do at our new position
 	if self.y >= mainmap.death_line then self:die() end
+
+	if self:is_touching_floor() then
+		if not self.touching_floor then
+			self.double_jumps = self.double_jumps_max
+			-- if dash_x == 0 then
+			-- 	spark_data.spawn("jumpburst", self.color, self.x + self.w/2, self.y + self.h, 0, 0, 0, 1, 1)
+			-- 	audio.play('land')
+			-- end
+		end
+		self.touching_floor = true
+	else
+		self.touching_floor = false
+	end
 end
 
 function actor:jump()
