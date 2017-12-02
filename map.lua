@@ -86,6 +86,12 @@ function map:fill_main()
 	self:set_block("slope_23_b", 27, 12)
 	self:set_block("slope_23_b", 29, 11)
 	self:set_block("slope_23_b", 31, 10)
+	self:set_block("slope_-23_a", 37, 12)
+	self:set_block("slope_-23_a", 35, 11)
+	self:set_block("slope_-23_a", 33, 10)
+	self:set_block("slope_-23_b", 36, 12)
+	self:set_block("slope_-23_b", 34, 11)
+	self:set_block("slope_-23_b", 32, 10)
 
 	self.death_line = (self.height - 1) * 32 -- this is two blocks above the bottom
 end
