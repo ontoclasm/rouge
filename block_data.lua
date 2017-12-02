@@ -64,4 +64,24 @@ block_data["slope_45_b"] =
 	slope_y_offset = -16,
 }
 
+block_data["slope_-45_a"] =
+{
+	hp = 0,
+	breakable = false,
+	collision_type = "slope",
+	collision_dirs = { u = false, d = true, l = false, r = true},
+	slope = 1,
+	slope_y_offset = 16,
+}
+
+block_data["slope_-45_b"] =
+{
+	hp = 0,
+	breakable = false,
+	collision_type = "slope",
+	collision_dirs = { u = false, d = true, l = false, r = true},
+	slope = 1,
+	slope_y_offset = -16,
+}
+
 return block_data

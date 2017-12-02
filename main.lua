@@ -70,7 +70,7 @@ function love.load()
 			sprite = "player", color = color.rouge, flash_color = color.white, flash_time = 0,
 			facing = 'r', anim_start = ctime,
 			ai = {control = "player"}, controls = {},
-			top_speed = 200,
+			top_speed = 250,
 			walk_accel = 1200, walk_friction = 500,
 			jump_speed = 550, air_accel = 700,
 			dash_speed = 700, dash_dur = 0.3, dash_cooldown = 0.1,
