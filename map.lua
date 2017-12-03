@@ -160,6 +160,12 @@ end
 
 function map:destroy_block(x, y)
 	self:set_block("air", x, y)
+	for i=1,5 do
+		angle = love.math.random() * math.pi * 2
+		v = 200 + 200 * love.math.random()
+		spark_data.spawn("chunk", color.white, img.tile_size * (x + love.math.random()), img.tile_size * (y + love.math.random()),
+						 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+	end
 end
 
 function map:print(m, px, py)

@@ -14,7 +14,7 @@ function shot:update(dt)
 
 	if self.duration ~= nil then
 		if ctime > self.birth_time + self.duration then
-			self:die()
+			self:die(true)
 		end
 	end
 
@@ -53,7 +53,7 @@ function shot:update(dt)
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
 					self:die(true)
-			elseif self.bounces > 0 then
+			elseif self.bounces and self.bounces > 0 then
 				-- reflect off
 				local dot = self.dy * ny + self.dx * nx
 
@@ -61,7 +61,7 @@ function shot:update(dt)
 				self.dy = (self.dy - 2 * dot * ny) * self.bounce_restitution
 
 				self.bounces = self.bounces - 1
-			else
+			elseif self.damage then
 				mainmap:hurt_block(hit[2], hit[3], self.damage)
 				self:die()
 				audio.play('hit2')
@@ -84,6 +84,12 @@ function shot:die(silent)
 	if not silent then
 		spark_data.spawn("tripop", self.color, self.x + self.w/2, self.y + self.h/2,
 						 0, 0, math.pi * love.math.random(0,1) / 2, -1 + 2 * love.math.random(0,1), -1 + 2 * love.math.random(0,1))
+		for i=1,5 do
+			angle = love.math.random() * math.pi * 2
+			v = 200 + 200 * love.math.random()
+			spark_data.spawn("spark", self.color, self.x + self.w/2, self.y + self.h/2,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
 	end
 	shots[self.id] = nil
 end

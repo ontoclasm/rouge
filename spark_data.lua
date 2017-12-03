@@ -12,6 +12,10 @@ function spark_data.spawn(class, color, x, y, dx, dy, r, sx, sy)
 		sparks[pid][i] = v
 	end
 
+	if sparks[pid]["duration_variance"] then
+		sparks[pid]["duration"] = sparks[pid]["duration"] + sparks[pid]["duration_variance"] * love.math.random()
+	end
+
 	return pid
 end
 
@@ -34,6 +38,24 @@ spark_data["tripop"] =
 	class = "tripop",
 	sprite = "tripop", center_x = 16, center_y = 16,
 	duration = 0.4
+}
+
+spark_data["spark"] =
+{
+	class = "spark",
+	sprite = "spark", center_x = 16, center_y = 16,
+	duration = 0.2,
+	duration_variance = 0.5,
+	gravity_multiplier = 0.3,
+}
+
+spark_data["chunk"] =
+{
+	class = "chunk",
+	sprite = "chunk", center_x = 16, center_y = 16,
+	duration = 0.5,
+	duration_variance = 0.5,
+	gravity_multiplier = 0.5,
 }
 
 return spark_data

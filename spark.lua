@@ -11,6 +11,11 @@ function spark:update(dt)
 	if ctime > self.birth_time + self.duration then
 		self:die()
 	end
+
+	if self.gravity_multiplier then
+		self.dy = self.dy + (self.gravity_multiplier * gravity * dt)
+	end
+
 	self.x = self.x + (self.dx * dt)
 	self.y = self.y + (self.dy * dt)
 end

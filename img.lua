@@ -46,6 +46,9 @@ function img.setup()
 	img.nq("bullet_23",			 1,	 7)
 	img.nq("bullet_0",			 2,	 7)
 
+	img.nq("spark",				 3,	 7)
+	img.nq("chunk",				 4,	 7)
+
 	img.view_tilewidth = math.ceil(window.w / img.tile_size)
 	img.view_tileheight = math.ceil(window.h / img.tile_size)
 

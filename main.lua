@@ -5,7 +5,7 @@ function love.load()
 	ctime = 0
 
 	window = {}
-	window.w, window.h = 1280, 800
+	window.w, window.h = 960, 600
 	love.window.setMode(window.w, window.h)
 	love.graphics.setBackgroundColor(16, 16, 32)
 
@@ -184,44 +184,6 @@ function love.draw()
 end
 
 function love.keypressed(key, unicode)
-	-- if key == "escape" then
-	-- 	if game_state == "pause" then unpause()
-	-- 	elseif game_state == "play" then pause()
-	-- 	end
-	-- end
-
-	-- timers
-	-- if key == "a" then
-	-- 	if (guitime - last_key_dir.l) < doubletap_time and not player:check_status("dash_cooldown") then
-	-- 		player:dash_left()
-	-- 	end
-	-- 	last_key_dir.l = guitime
-	-- end
-	-- if key == "d" then
-	-- 	if (guitime - last_key_dir.r) < doubletap_time and not player:check_status("dash_cooldown") then
-	-- 		player:dash_right()
-	-- 	end
-	-- 	last_key_dir.r = guitime
-	-- end
-	-- if key == "space" then
-	-- 	player.controls.jump = true
-	-- 	last_key_dir.u = guitime
-	-- end
-	-- if key == "s" then
-	-- end
-
-	-- if key == "q" then
-	-- 	if game_state == "pause" then
-	-- 		love.event.push("quit")
-	-- 	else
-	-- 		player.controls.swap_weapons = true
-	-- 	end
-	-- end
-
-	-- if key == "r" and player.weapon.ammo ~= player.weapon.ammo_max then
-	-- 	player.controls.reload = true
-	-- end
-
 	-- debug
 	if key == "1" then
 		mainmap:print(nextpiece, map.grid_at_pos(mouse.x + camera.x), map.grid_at_pos(mouse.y + camera.y))
