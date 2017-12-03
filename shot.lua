@@ -7,6 +7,7 @@ function shot:new(o)
 	return o
 end
 
+local hit, mx, mt, mt, nx, ny
 function shot:update(dt)
 	-- if we have a special update function, run it
 	if self.f ~= nil then self.f(self, dt) end
@@ -17,35 +18,49 @@ function shot:update(dt)
 		end
 	end
 
-	-- collide: first with tiles, then mobs
-	hit, mx, my, mt = physics.map_collision_aabb_sweep(self, self.dx * dt, self.dy * dt)
+	if self.gravity_multiplier then
+		self.dy = self.dy + (self.gravity_multiplier * gravity * dt)
+	end
 
-	if self.faction == "player" then
-		for j,z in pairs(enemies) do
-			-- if math.abs(self.x - z.x) <= 64 and math.abs(self.y - z.y) <= 64 then
-			hx, hy, ht = physics.collision_aabb_sweep(self, z, self.dx * dt, self.dy * dt)
+	-- collide: first with tiles, then mobs
+	hit, mx, my, mt, nx, ny = physics.map_collision_aabb_sweep(self, self.dx * dt, self.dy * dt)
+
+	if self.damage then
+		if self.faction == "player" then
+			for j,z in pairs(enemies) do
+				-- if math.abs(self.x - z.x) <= 64 and math.abs(self.y - z.y) <= 64 then
+				hx, hy, ht = physics.collision_aabb_sweep(self, z, self.dx * dt, self.dy * dt)
+				if ht and ht < mt then
+					hit = {"enemy", j}
+					mt, mx, my = ht, hx, hy
+				end
+				-- end
+			end
+		elseif self.faction == "enemy" then
+			hx, hy, ht = physics.collision_aabb_sweep(self, player, self.dx * dt, self.dy * dt)
 			if ht and ht < mt then
-				hit = {"enemy", j}
+				hit = {"player"}
 				mt, mx, my = ht, hx, hy
 			end
-			-- end
-		end
-	elseif self.faction == "enemy" then
-		hx, hy, ht = physics.collision_aabb_sweep(self, player, self.dx * dt, self.dy * dt)
-		if ht and ht < mt then
-			hit = {"player"}
-			mt, mx, my = ht, hx, hy
 		end
 	end
 
 	self.x = mx
 	self.y = my
 
-	-- now, if we hit something, explode
+	-- now, if we hit something, react
 	if hit then
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
-				self:die(true)
+					self:die(true)
+			elseif self.bounces > 0 then
+				-- reflect off
+				local dot = self.dy * ny + self.dx * nx
+
+				self.dx = (self.dx - 2 * dot * nx) * self.bounce_restitution
+				self.dy = (self.dy - 2 * dot * ny) * self.bounce_restitution
+
+				self.bounces = self.bounces - 1
 			else
 				mainmap:hurt_block(hit[2], hit[3], self.damage)
 				self:die()
