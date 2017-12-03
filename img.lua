@@ -42,6 +42,10 @@ function img.setup()
 	img.nq("tripop",			 2,	 6)
 	img.nq("tripop",			 3,	 6)
 
+	img.nq("bullet_45",			 0,	 7)
+	img.nq("bullet_23",			 1,	 7)
+	img.nq("bullet_0",			 2,	 7)
+
 	img.view_tilewidth = math.ceil(window.w / img.tile_size)
 	img.view_tileheight = math.ceil(window.h / img.tile_size)
 

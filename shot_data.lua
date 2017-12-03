@@ -22,7 +22,7 @@ shot_data["pellet"] =
 	class = "pellet", name = "Machine Gun Bullet",
 	damage = 20,
 	color = color.ltblue,
-	w = 2, h = 2
+	w = 4, h = 4
 }
 
 shot_data["plasma"] =

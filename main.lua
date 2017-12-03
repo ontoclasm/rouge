@@ -130,7 +130,9 @@ function love.draw()
 	love.graphics.draw(img.tileset_batch, -(camera.x % 32), -(camera.y % 32))
 
 	for _,v in pairs(enemies) do
-		v:draw()
+		if on_screen(v) then
+			v:draw()
+		end
 	end
 
 	player:draw()
@@ -173,7 +175,7 @@ function love.draw()
 	love.graphics.print("draws: "..dc.drawcalls, 20, window.h - 60)
 	love.graphics.print(map.grid_at_pos(mouse.x + camera.x)..", "..map.grid_at_pos(mouse.y + camera.y), 20, window.h - 40)
 
-	physics.map_collision_test(player)
+	-- physics.map_collision_test(player)
 
 	if game_state == "pause" then
 		love.graphics.setShader()
@@ -229,6 +231,7 @@ function love.keypressed(key, unicode)
 	end
 	if key == "3" then
 		mainmap:set_block("slope_45", map.grid_at_pos(mouse.x + camera.x), map.grid_at_pos(mouse.y + camera.y))
+		redraw = true
 	end
 	if key == "8" then
 		player.dy = player.dy - 50000
@@ -295,3 +298,10 @@ end
 
 function view_x(a) return math.floor(a.x-camera.x) end
 function view_y(a) return math.floor(a.y-camera.y) end
+
+local vx, vy
+function on_screen(a)
+	vx = view_x(a)
+	vy = view_y(a)
+	return vx > -64 and vx < window.w + 64 and vy > -64 and window.h + 64
+end
