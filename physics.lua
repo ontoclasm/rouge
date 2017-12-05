@@ -7,12 +7,12 @@ local hit_time, hit_x, hit_y, nx, ny
 --- test if moving a by (vx,vy) will cause it to hit b
 -- if so, return x,y (point of impact), 0 <= t <= 1 ("time" of impact), nx,ny (normal of the surface we ran into)
 function physics.collision_aabb_sweep(a, b, vx, vy)
-	ax, bx =  a.x + a.w/2, b.x + b.w/2
-	pad_x = b.w/2 + a.w/2
+	ax, bx = a.x, b.x
+	pad_x = b.half_w + a.half_w
 	sign_x = mymath.sign(vx)
 
-	ay, by =  a.y + a.h/2, b.y + b.h/2
-	pad_y = b.h/2 + a.h/2
+	ay, by = a.y, b.y
+	pad_y = b.half_h + a.half_h
 	sign_y = mymath.sign(vy)
 
 	if vx ~= 0 then
@@ -72,24 +72,24 @@ end
 local rx, ry, norm
 
 function physics.collision_aabb_sweep_slope(a, b, vx, vy, slope, slope_y_offset, bhm)
-	ax, bx =  a.x + a.w/2, b.x + b.w/2
+	ax, bx =  a.x, b.x
 	sign_x = mymath.sign(vx)
 	scale_x = 1 / vx
 
-	ay, by =  a.y + a.h/2, b.y + b.h/2
+	ay, by =  a.y, b.y
 	sign_y = mymath.sign(vy)
 	scale_y = 1 / vy
 
 	if vx ~= 0 then
 		if sign_x == 1 then
-			near_time_x = (bx - ax - b.w * bhm.l / 2 - a.w/2) * scale_x
-			far_time_x = (bx - ax + b.w * bhm.r / 2 + a.w/2) * scale_x
+			near_time_x = (bx - ax - b.half_w * bhm.l - a.half_w) * scale_x
+			far_time_x = (bx - ax + b.half_w * bhm.r + a.half_w) * scale_x
 		else
-			near_time_x = (bx - ax + b.w * bhm.r / 2 + a.w/2) * scale_x
-			far_time_x = (bx - ax - b.w * bhm.l / 2 - a.w/2) * scale_x
+			near_time_x = (bx - ax + b.half_w * bhm.r + a.half_w) * scale_x
+			far_time_x = (bx - ax - b.half_w * bhm.l - a.half_w) * scale_x
 		end
 	else
-		if ax > bx - b.w * bhm.l / 2 - a.w/2 and ax < bx + b.w * bhm.r / 2 + a.w/2 then
+		if ax > bx - b.half_w * bhm.l - a.half_w and ax < bx + b.half_w * bhm.r + a.half_w then
 			near_time_x, far_time_x = -9999, 9999
 		else
 			return
@@ -98,14 +98,14 @@ function physics.collision_aabb_sweep_slope(a, b, vx, vy, slope, slope_y_offset,
 
 	if vy ~= 0 then
 		if sign_y == 1 then
-			near_time_y = (by - ay - b.h * bhm.u / 2 - a.h/2) * scale_y
-			far_time_y = (by - ay + b.h * bhm.d / 2 + a.h/2) * scale_y
+			near_time_y = (by - ay - b.half_h * bhm.u - a.half_h) * scale_y
+			far_time_y = (by - ay + b.half_h * bhm.d + a.half_h) * scale_y
 		else
-			near_time_y = (by - ay + b.h * bhm.d / 2 + a.h/2) * scale_y
-			far_time_y = (by - ay - b.h * bhm.u / 2 - a.h/2) * scale_y
+			near_time_y = (by - ay + b.half_h * bhm.d + a.half_h) * scale_y
+			far_time_y = (by - ay - b.half_h * bhm.u - a.half_h) * scale_y
 		end
 	else
-		if ay > by - b.h * bhm.u / 2 - a.h/2 and ay < by + b.h * bhm.d / 2 + a.h/2 then
+		if ay > by - b.half_h * bhm.u - a.half_h and ay < by + b.half_h * bhm.d + a.half_h then
 			near_time_y, far_time_y = -9999, 9999
 		else
 			return
@@ -120,8 +120,8 @@ function physics.collision_aabb_sweep_slope(a, b, vx, vy, slope, slope_y_offset,
 	-- ugh, now deal with the slanted edge
 
 	-- coords of the relevant corner of a; currently this is always a bottom corner
-	rx = ax - a.w * mymath.sign(slope) / 2
-	ry = ay + a.h / 2
+	rx = ax - a.half_w * mymath.sign(slope)
+	ry = ay + a.half_h
 
 	if vx ~= 0 then
 		-- find the x distance traveled; divide by vx to find near_time_q
@@ -204,15 +204,10 @@ local hit
 local mx, my, mt, mnx, mny
 
 function physics.map_collision_aabb_sweep(a, vx, vy)
-	grid_x1 = map.grid_at_pos(math.min(a.x, a.x + vx))
-	grid_x2 = map.grid_at_pos(math.max(a.x + a.w, a.x + a.w + vx))
-	grid_y1 = map.grid_at_pos(math.min(a.y, a.y + vy))
-	grid_y2 = map.grid_at_pos(math.max(a.y + a.h, a.y + a.h + vy))
-
-	-- local grid_x1 = 1
-	-- local grid_x2 = mainmap.width - 1
-	-- local grid_y1 = 1
-	-- local grid_y2 = mainmap.width - 1
+	grid_x1 = map.grid_at_pos(math.min(a.x - a.half_w, a.x - a.half_w + vx))
+	grid_x2 = map.grid_at_pos(math.max(a.x + a.half_w, a.x + a.half_w + vx))
+	grid_y1 = map.grid_at_pos(math.min(a.y - a.half_h, a.y - a.half_h + vy))
+	grid_y2 = map.grid_at_pos(math.max(a.y + a.half_h, a.y + a.half_h + vy))
 
 	mt = 1
 	hit = nil
@@ -268,13 +263,13 @@ local ijhx, ijhy, ijht, ijnx, ijny
 local rt, rvx, rvy
 
 function physics.map_collision_test(a)
-	vx = mouse.x + camera.x - a.x - a.w/2
-	vy = mouse.y + camera.y - a.y - a.h/2
+	vx = mouse.x + camera.x - a.x
+	vy = mouse.y + camera.y - a.y
 
-	grid_x1 = map.grid_at_pos(math.min(a.x, a.x + vx))
-	grid_x2 = map.grid_at_pos(math.max(a.x + a.w, a.x + vx + a.w))
-	grid_y1 = map.grid_at_pos(math.min(a.y, a.y + vy))
-	grid_y2 = map.grid_at_pos(math.max(a.y + a.h, a.y + vy + a.h))
+	grid_x1 = map.grid_at_pos(math.min(a.x - a.half_w, a.x - a.half_w + vx))
+	grid_x2 = map.grid_at_pos(math.max(a.x + a.half_w, a.x + a.half_w + vx))
+	grid_y1 = map.grid_at_pos(math.min(a.y - a.half_h, a.y - a.half_h + vy))
+	grid_y2 = map.grid_at_pos(math.max(a.y + a.half_h, a.y + a.half_h + vy))
 
 	mx, my, mt, mnx, mny = a.x + vx, a.y + vy, 1, 0, 0
 
@@ -334,13 +329,13 @@ function physics.map_collision_test(a)
 	else
 		love.graphics.setColor(200, 200, 50)
 	end
-	love.graphics.line(a.x + a.w/2 - camera.x, a.y + a.h/2 - camera.y, mx + a.w/2 - camera.x, my + a.h/2 - camera.y)
-	love.graphics.rectangle('line', mx - camera.x, my - camera.y, a.w, a.h)
+	love.graphics.line(a.x - camera.x, a.y - camera.y, mx - camera.x, my - camera.y)
+	love.graphics.rectangle('line', mx - a.half_w - camera.x, my - a.half_h - camera.y, a.half_w * 2, a.half_h * 2)
 	love.graphics.setColor(color.white)
 	-- love.graphics.rectangle('line', a.x - camera.x, a.y - camera.y, a.w, a.h)
 	if mt < 1 then
-		love.graphics.line(mx + a.w/2 - camera.x, my + a.h/2 - camera.y, mx + a.w/2 - camera.x + mnx * 8, my + a.h/2 - camera.y + mny * 8)
-		love.graphics.line(mx + a.w/2 - camera.x, my + a.h/2 - camera.y, mx + a.w/2 - camera.x + rvx, my + a.h/2 - camera.y + rvy)
+		love.graphics.line(mx - camera.x, my - camera.y, mx - camera.x + mnx * 8, my - camera.y + mny * 8)
+		love.graphics.line(mx - camera.x, my - camera.y, mx - camera.x + rvx, my - camera.y + rvy)
 	end
 end
 

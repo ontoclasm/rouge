@@ -55,16 +55,16 @@ function actor:update_controls(dt)
 			jy = controller:get('r_down') - controller:get('r_up')
 			if jx == 0 and jy == 0 then
 				if self.facing == 'r' then
-					mouse = {x = player.x + player.w/2 + aim_distance - camera.x,
-							 y = player.y + player.h/2 - camera.y}
+					mouse = {x = player.x + aim_distance - camera.x,
+							 y = player.y - camera.y}
 				else
-					mouse = {x = player.x + player.w/2 - aim_distance - camera.x,
-							 y = player.y + player.h/2 - camera.y}
+					mouse = {x = player.x - aim_distance - camera.x,
+							 y = player.y - camera.y}
 				end
 			else
 				norm = math.sqrt(jx * jx + jy * jy)
-				mouse = {x = player.x + player.w/2 + mymath.round(aim_distance * (jx / norm)) - camera.x,
-						 y = player.y + player.h/2 + mymath.round(aim_distance * (jy / norm)) - camera.y}
+				mouse = {x = player.x + mymath.round(aim_distance * (jx / norm)) - camera.x,
+						 y = player.y + mymath.round(aim_distance * (jy / norm)) - camera.y}
 			end
 		else
 			mouse = {x = love.mouse.getX(), y = love.mouse.getY()}
@@ -72,7 +72,7 @@ function actor:update_controls(dt)
 		self.controls.aim_x, self.controls.aim_y = mouse.x + camera.x, mouse.y + camera.y
 
 		-- face the cursor
-		if self.controls.aim_x >= self.x + (self.w/2) then
+		if self.controls.aim_x >= self.x then
 			self.facing = 'r'
 		else
 			self.facing = 'l'
@@ -83,26 +83,26 @@ function actor:update_controls(dt)
 end
 
 function actor:is_touching_floor()
-	return (mainmap:can_stand_on_pos(self.x, self.y + self.h + 1)
-			or mainmap:can_stand_on_pos(self.x + self.w, self.y + self.h + 1))
+	return (mainmap:can_stand_on_pos(self.x - self.half_w, self.y + self.half_h + 1)
+			or mainmap:can_stand_on_pos(self.x + self.half_w, self.y + self.half_h + 1))
 end
 
 function actor:is_touching_left()
-	return (mainmap:grid_blocks_dir(map.grid_at_pos(self.x - 2), map.grid_at_pos(self.y), 'r')
-			or mainmap:grid_blocks_dir(map.grid_at_pos(self.x - 2), map.grid_at_pos(self.y + self.h - 1), 'r'))
+	return (mainmap:grid_blocks_dir(map.grid_at_pos(self.x - self.half_w - 2), map.grid_at_pos(self.y - self.half_h), 'r')
+			or mainmap:grid_blocks_dir(map.grid_at_pos(self.x - self.half_w - 2), map.grid_at_pos(self.y + self.half_h - 1), 'r'))
 end
 
 function actor:is_touching_right()
-	return (mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.w + 1), map.grid_at_pos(self.y), 'l')
-			or mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.w + 1), map.grid_at_pos(self.y + self.h - 1), 'l'))
+	return (mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.half_w + 1), map.grid_at_pos(self.y - self.half_h), 'l')
+			or mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.half_w + 1), map.grid_at_pos(self.y + self.half_h - 1), 'l'))
 end
 
 function actor:is_on_ledge_left()
-	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x - 8), map.grid_at_pos(self.y + self.h + 1), 'u'))
+	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x - self.half_w - 8), map.grid_at_pos(self.y + self.half_h + 1), 'u'))
 end
 
 function actor:is_on_ledge_right()
-	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.w + 7), map.grid_at_pos(self.y + self.h + 1), 'u'))
+	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.half_w + 7), map.grid_at_pos(self.y + self.half_h + 1), 'u'))
 end
 
 function actor:update_location(dt)
@@ -140,7 +140,7 @@ function actor:update_location(dt)
 
 			if self.controls.jump == true then
 				self:jump()
-				spark_data.spawn("jumpburst", self.color, self.x + self.w/2, self.y + self.h, 0, 0, 0, 1, 1)
+				spark_data.spawn("jumpburst", self.color, self.x, self.y + self.half_h, 0, 0, 0, 1, 1)
 				audio.play('land')
 			end
 		else
@@ -158,7 +158,7 @@ function actor:update_location(dt)
 			if self.controls.jump == true and (self.flies or self.double_jumps > 0) and not self:check_status("dash_cooldown") then
 				self:jump()
 				if not self.flies then
-					spark_data.spawn("dashburst", self.color, self.x + self.w/2, self.y + self.h/2, 0, 100, math.pi * 3 / 2, 1, 1)
+					spark_data.spawn("dashburst", self.color, self.x, self.y, 0, 100, math.pi * 3 / 2, 1, 1)
 					self.double_jumps = self.double_jumps - 1
 					audio.play('dash')
 				end
@@ -186,7 +186,7 @@ function actor:update_location(dt)
 
 	if hit then
 		if ny < -0.5 and self.dy > 200 and not self.touching_floor then
-			spark_data.spawn("jumpburst", self.color, mx + self.w/2, my + self.h, 0, 0, 0, 1, 1)
+			spark_data.spawn("jumpburst", self.color, mx, my + self.half_h, 0, 0, 0, 1, 1)
 			audio.play('land')
 		end
 
@@ -197,7 +197,7 @@ function actor:update_location(dt)
 
 		if m_time < 1 then
 			-- now try continuing our movement along the new vector
-			hit, mx, my, m_time, nx, ny = physics.map_collision_aabb_sweep({x = mx, y = my, h = self.h, w = self.w},
+			hit, mx, my, m_time, nx, ny = physics.map_collision_aabb_sweep({x = mx, y = my, half_h = self.half_h, half_w = self.half_w},
 																		   self.dx * dt * (1 - m_time), self.dy * dt * (1 - m_time))
 			if hit then
 
@@ -232,14 +232,14 @@ end
 function actor:dash_left()
 	self.status.dash_left = ctime + self.dash_dur
 	self.status.dash_cooldown = ctime + self.dash_dur + self.dash_cooldown
-	spark_data.spawn("dashburst", self.color, self.x + self.w/2, self.y + self.h/2, 100, 0, 0, -1, 1)
+	spark_data.spawn("dashburst", self.color, self.x, self.y, 100, 0, 0, -1, 1)
 	audio.play('dash')
 end
 
 function actor:dash_right()
 	self.status.dash_right = ctime + self.dash_dur
 	self.status.dash_cooldown = ctime + self.dash_dur + self.dash_cooldown
-	spark_data.spawn("dashburst", self.color, self.x + self.w/2, self.y + self.h/2, -100, 0, 0, 1, 1)
+	spark_data.spawn("dashburst", self.color, self.x, self.y, -100, 0, 0, 1, 1)
 	audio.play('dash')
 end
 
@@ -265,16 +265,13 @@ function actor:update_weapon(dt)
 end
 
 function actor:fire(t_x, t_y)
-	local x = self.x + self.w/2
-	local y = self.y + self.h/2
-
-	local angle = math.atan2(t_y - y, t_x - x)
+	local angle = math.atan2(t_y - self.y, t_x - self.x)
 
 	for k = 1, (self.weapon.shot_count or 1) do
 		local shot_angle = mymath.random_spread(angle, self.cof)
 		local shot_speed = self.weapon.shot_speed + (self.weapon.shot_speed_range * (2 * love.math.random() - 1))
 
-		shot_data.spawn(self.weapon.shot, x, y,
+		shot_data.spawn(self.weapon.shot, self.x, self.y,
 		                shot_speed * math.cos(shot_angle), shot_speed * math.sin(shot_angle),
 		                self.name, self.faction)
 	end
@@ -418,7 +415,7 @@ function actor:draw()
 		love.graphics.setColor(self.color)
 	end
 	love.graphics.draw(img.tileset, img.tile[self.sprite .. s .. self.facing][frame],
-					   view_x(self) - 8, view_y(self) - 16)
+					   view_x(self) - 16, view_y(self) - 24)
 
 	if self.anim_last ~= s then
 		self.anim_start = ctime
@@ -426,7 +423,7 @@ function actor:draw()
 	end
 
 	-- debug
-	love.graphics.print(self.id, math.floor(self.x + self.w - camera.x), math.floor(self.y - camera.y))
+	love.graphics.print(self.id, math.floor(self.x + self.half_w - camera.x), math.floor(self.y - self.half_h - camera.y))
 end
 
 return actor

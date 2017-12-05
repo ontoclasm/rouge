@@ -27,7 +27,7 @@ end
 enemy_data["bird"] =
 {
 	class = "bird",
-	w = 16, h = 16,
+	half_w = 18, half_h = 8,
 	sprite = "demon", color = color.blue,
 	hp = 60, weapon_class = "default",
 	ai_routine = "flyer", ai_sequence = "fly around",
@@ -40,7 +40,7 @@ enemy_data["bird"] =
 enemy_data["demon"] =
 {
 	class = "demon",
-	w = 16, h = 16,
+	half_w = 8, half_h = 8,
 	sprite = "demon", color = color.blue,
 	hp = 60, weapon_class = "shotgun",
 	ai_routine = "walker",

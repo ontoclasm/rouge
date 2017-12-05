@@ -65,7 +65,7 @@ function love.load()
 	player = actor:new(
 		{
 			class = "player", id = 1, name = "player1", faction = "player",
-			x = 250, y = 250, w = 16, h = 16,
+			x = 250, y = 250, half_w = 8, half_h = 8,
 			dx = 0, dy = 0,
 			sprite = "player", color = color.rouge, flash_color = color.white, flash_time = 0,
 			facing = 'r', anim_start = ctime,
@@ -148,14 +148,14 @@ function love.draw()
 	-- gui
 	love.graphics.setColor(player.weapon.color)
 	if player:check_status("reload") then
-		love.graphics.arc("line", "open", view_x(player) + player.w/2, view_y(player) + player.h/2, 20, 0,
+		love.graphics.arc("line", "open", view_x(player), view_y(player), 20, 0,
 						  2 * math.pi * (player.status.reload - ctime) / player.weapon.reload_time)
 	end
 
 	if game_state == "play" then
 		love.graphics.draw(img.cursor, mouse.x - 2, mouse.y - 2)
 		love.graphics.circle("line",  mouse.x, mouse.y,
-							 math.sin(player.cof) * mymath.dist(mouse.x, mouse.y, view_x(player) + player.w/2, view_y(player) + player.h/2))
+							 math.sin(player.cof) * mymath.dist(mouse.x, mouse.y, view_x(player), view_y(player)))
 	end
 
 	love.graphics.setColor(player.color)
@@ -175,7 +175,7 @@ function love.draw()
 	love.graphics.print("draws: "..dc.drawcalls, 20, window.h - 60)
 	love.graphics.print(map.grid_at_pos(mouse.x + camera.x)..", "..map.grid_at_pos(mouse.y + camera.y), 20, window.h - 40)
 
-	-- physics.map_collision_test(player)
+	physics.map_collision_test(player)
 
 	if game_state == "pause" then
 		love.graphics.setShader()

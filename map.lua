@@ -20,7 +20,7 @@ function map.grid_at_pos(px)
 end
 
 function map.bounding_box(x, y)
-	return {x = img.tile_size * x, y = img.tile_size * y, w = img.tile_size, h = img.tile_size}
+	return {x = img.tile_size * (x + 0.5), y = img.tile_size * (y + 0.5), half_w = img.tile_size / 2, half_h = img.tile_size / 2}
 end
 
 function map.orth_normal_to_dir(nx, ny)

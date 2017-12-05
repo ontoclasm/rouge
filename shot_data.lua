@@ -11,7 +11,7 @@ function shot_data.spawn(class, x, y, dx, dy, owner, faction)
 		shots[pid][i] = v
 	end
 
-	shots[pid].x, shots[pid].y = x - shots[pid].w /2, y - shots[pid].h /2
+	shots[pid].x, shots[pid].y = x, y
 	shots[pid].birth_time = ctime
 
 	return pid
@@ -22,7 +22,7 @@ shot_data["pellet"] =
 	class = "pellet", name = "Machine Gun Bullet",
 	damage = 20,
 	color = color.ltblue,
-	w = 4, h = 4,
+	half_w = 2, half_h = 2,
 	gravity_multiplier = 1,
 	bounces = 5, bounce_restitution = 0.8,
 }
@@ -32,7 +32,7 @@ shot_data["plasma"] =
 	class = "plasma", name = "Plasma Sphere",
 	damage = 60,
 	color = color.yellow,
-	w = 12, h = 12
+	half_w = 6, half_h = 6,
 }
 
 shot_data["buckshot"] =
@@ -40,7 +40,7 @@ shot_data["buckshot"] =
 	class = "buckshot", name = "Buckshot Pellet",
 	damage = 10, duration = 0.2,
 	color = color.rouge,
-	w = 2, h = 2
+	half_w = 2, half_h = 2,
 }
 
 return shot_data

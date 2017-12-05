@@ -25,7 +25,7 @@ function ai.process(a)
 	end
 
 	if a.controls.fire_1 then
-		a.controls.aim_x, a.controls.aim_y = player.x + player.w/2, player.y + player.h/2
+		a.controls.aim_x, a.controls.aim_y = player.x, player.y
 	end
 
 	-- face forward
@@ -86,7 +86,7 @@ end
 
 local dist
 ai.actions["shoot player if close"] = function(a)
-	dist = mymath.dist(a.x + a.w/2, a.y + a.h/2, player.x + player.w/2, player.y + player.h/2)
+	dist = mymath.dist(a.x, a.y, player.x, player.y)
 	if dist < 200 then
 		ai.actions["start shooting"](a)
 	elseif dist > 250 then

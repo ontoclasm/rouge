@@ -82,12 +82,12 @@ end
 
 function shot:die(silent)
 	if not silent then
-		spark_data.spawn("tripop", self.color, self.x + self.w/2, self.y + self.h/2,
+		spark_data.spawn("tripop", self.color, self.x, self.y,
 						 0, 0, math.pi * love.math.random(0,1) / 2, -1 + 2 * love.math.random(0,1), -1 + 2 * love.math.random(0,1))
 		for i=1,5 do
 			angle = love.math.random() * math.pi * 2
 			v = 200 + 200 * love.math.random()
-			spark_data.spawn("spark", self.color, self.x + self.w/2, self.y + self.h/2,
+			spark_data.spawn("spark", self.color, self.x, self.y,
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
 	end
@@ -99,35 +99,35 @@ function shot:draw()
 	angle = (mymath.round(math.atan2(self.dy, self.dx) * 8 / math.pi)) % 8 -- remember y+ (i.e. pi/2) is DOWN :suicide:
 	if angle == 0 or angle == 8 then
 		love.graphics.draw(img.tileset, img.tile["bullet_0"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, 0, 1, 1,
+						   view_x(self), view_y(self), 0, 1, 1,
 						   16, 16)
 	elseif angle == 1 then
 		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, 0, 1, 1,
+						   view_x(self), view_y(self), 0, 1, 1,
 						   16, 16)
 	elseif angle == 2 then
 		love.graphics.draw(img.tileset, img.tile["bullet_45"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, 0, 1, 1,
+						   view_x(self), view_y(self), 0, 1, 1,
 						   16, 16)
 	elseif angle == 3 then
 		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, math.pi / 2, -1, 1,
+						   view_x(self), view_y(self), math.pi / 2, -1, 1,
 						   16, 16)
 	elseif angle == 4 then
 		love.graphics.draw(img.tileset, img.tile["bullet_0"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, math.pi / 2, 1, 1,
+						   view_x(self), view_y(self), math.pi / 2, 1, 1,
 						   16, 16)
 	elseif angle == 5 then
 		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, math.pi / 2, 1, 1,
+						   view_x(self), view_y(self), math.pi / 2, 1, 1,
 						   16, 16)
 	elseif angle == 6 then
 		love.graphics.draw(img.tileset, img.tile["bullet_45"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, math.pi / 2, 1, 1,
+						   view_x(self), view_y(self), math.pi / 2, 1, 1,
 						   16, 16)
 	elseif angle == 7 then
 		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   view_x(self) + self.w/2, view_y(self) + self.h/2, 0, 1, -1,
+						   view_x(self), view_y(self), 0, 1, -1,
 						   16, 16)
 	end
 end
