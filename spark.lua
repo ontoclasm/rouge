@@ -36,7 +36,7 @@ function spark:draw()
 
 	love.graphics.setColor(self.color)
 	love.graphics.draw(img.tileset, img.tile[self.sprite][frame],
-					   view_x(self), view_y(self), self.r, self.sx, self.sy,
+					   camera.view_x(self), camera.view_y(self), self.r, self.sx, self.sy,
 					   self.center_x, self.center_y)
 end
 

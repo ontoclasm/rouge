@@ -130,7 +130,7 @@ function love.draw()
 	love.graphics.draw(img.tileset_batch, -(camera.x % 32), -(camera.y % 32))
 
 	for _,v in pairs(enemies) do
-		if on_screen(v) then
+		if camera.on_screen(v) then
 			v:draw()
 		end
 	end
@@ -148,14 +148,14 @@ function love.draw()
 	-- gui
 	love.graphics.setColor(player.weapon.color)
 	if player:check_status("reload") then
-		love.graphics.arc("line", "open", view_x(player), view_y(player), 20, 0,
+		love.graphics.arc("line", "open", camera.view_x(player), camera.view_y(player), 20, 0,
 						  2 * math.pi * (player.status.reload - ctime) / player.weapon.reload_time)
 	end
 
 	if game_state == "play" then
 		love.graphics.draw(img.cursor, mouse.x - 2, mouse.y - 2)
 		love.graphics.circle("line",  mouse.x, mouse.y,
-							 math.sin(player.cof) * mymath.dist(mouse.x, mouse.y, view_x(player), view_y(player)))
+							 math.sin(player.cof) * mymath.dist(mouse.x, mouse.y, camera.view_x(player), camera.view_y(player)))
 	end
 
 	love.graphics.setColor(player.color)
@@ -256,14 +256,4 @@ function draw_pause_menu()
 	love.graphics.printf("Press Q to quit", math.floor(window.w/2 - 200), math.floor(window.h/2 - font:getHeight()/2), 400, "center")
 	love.graphics.setColor(color.white)
 	love.graphics.draw(img.cursor, love.mouse.getX() - 2, love.mouse.getY() - 2)
-end
-
-function view_x(a) return math.floor(a.x-camera.x) end
-function view_y(a) return math.floor(a.y-camera.y) end
-
-local vx, vy
-function on_screen(a)
-	vx = view_x(a)
-	vy = view_y(a)
-	return vx > -64 and vx < window.w + 64 and vy > -64 and window.h + 64
 end

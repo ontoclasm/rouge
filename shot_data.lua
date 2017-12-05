@@ -24,7 +24,7 @@ shot_data["pellet"] =
 	color = color.ltblue,
 	half_w = 2, half_h = 2,
 	gravity_multiplier = 1,
-	bounces = 5, bounce_restitution = 0.8,
+	bounces = 1, bounce_restitution = 0.8,
 }
 
 shot_data["plasma"] =
