@@ -24,30 +24,35 @@ function img.setup()
 	img.nq("slope_-23_a",		13,	 0)
 	img.nq("slope_-23_b",		14,	 0)
 
-	img.nq_sprite("player", 	 0,	 1)
-	img.nq_sprite("demon",		 0,	 3)
+	img.nq("backdrop",			 0,	 1)
+	img.nq("backdrop",			 1,	 1)
+	img.nq("backdrop",			 2,	 1)
+	img.nq("backdrop",			 3,	 1)
 
-	img.nq("dashburst",			 0,	 5)
-	img.nq("dashburst",			 1,	 5)
-	img.nq("dashburst",			 2,	 5)
-	img.nq("dashburst",			 3,	 5)
+	img.nq_sprite("player", 	 0,	 4)
+	img.nq_sprite("demon",		 0,	 6)
 
-	img.nq("jumpburst",			 4,	 5)
-	img.nq("jumpburst",			 5,	 5)
-	img.nq("jumpburst",			 6,	 5)
-	img.nq("jumpburst",			 7,	 5)
+	img.nq("dashburst",			 0,	 8)
+	img.nq("dashburst",			 1,	 8)
+	img.nq("dashburst",			 2,	 8)
+	img.nq("dashburst",			 3,	 8)
 
-	img.nq("tripop",			 0,	 6)
-	img.nq("tripop",			 1,	 6)
-	img.nq("tripop",			 2,	 6)
-	img.nq("tripop",			 3,	 6)
+	img.nq("jumpburst",			 4,	 8)
+	img.nq("jumpburst",			 5,	 8)
+	img.nq("jumpburst",			 6,	 8)
+	img.nq("jumpburst",			 7,	 8)
 
-	img.nq("bullet_45",			 0,	 7)
-	img.nq("bullet_23",			 1,	 7)
-	img.nq("bullet_0",			 2,	 7)
+	img.nq("tripop",			 0,	 9)
+	img.nq("tripop",			 1,	 9)
+	img.nq("tripop",			 2,	 9)
+	img.nq("tripop",			 3,	 9)
 
-	img.nq("spark",				 3,	 7)
-	img.nq("chunk",				 4,	 7)
+	img.nq("bullet_45",			 0,	10)
+	img.nq("bullet_23",			 1,	10)
+	img.nq("bullet_0",			 2,	10)
+
+	img.nq("spark",				 3,	10)
+	img.nq("chunk",				 4,	10)
 
 	img.view_tilewidth = math.ceil(window.w / img.tile_size)
 	img.view_tileheight = math.ceil(window.h / img.tile_size)
@@ -102,8 +107,10 @@ function img.update_tileset_batch()
 		img.tileset_batch:clear()
 		for x=0, img.view_tilewidth do
 			for y=0, img.view_tileheight do
-				img.tileset_batch:add(img.tile[mainmap:block_at(new_x+x, new_y+y)][mainmap:tileframe_at(new_x+x, new_y+y)],
-									  x*img.tile_size, y*img.tile_size)
+				if not block_data[mainmap:block_at(new_x+x, new_y+y)].invisible then
+					img.tileset_batch:add(img.tile[mainmap:block_at(new_x+x, new_y+y)][mainmap:tileframe_at(new_x+x, new_y+y)],
+										  x*img.tile_size, y*img.tile_size)
+				end
 			end
 		end
 		img.tileset_batch:flush()

@@ -7,7 +7,7 @@ function love.load()
 	window = {}
 	window.w, window.h = 960, 600
 	love.window.setMode(window.w, window.h)
-	love.graphics.setBackgroundColor(16, 16, 32)
+	love.graphics.setBackgroundColor(20, 20, 40)
 
 	shaderDesaturate = love.graphics.newShader("desaturate.lua")
 
@@ -57,6 +57,19 @@ function love.load()
 
 	img.setup()
 
+	-- set up the parallax background
+	parallax_canvas = love.graphics.newCanvas(256, 256)
+	love.graphics.setCanvas(parallax_canvas)
+	for i=0, 7 do
+		for j=0, 7 do
+			k = love.math.random(1, 8)
+			if k <= 4 then
+				love.graphics.draw(img.tileset, img.tile["backdrop"][k], 32 * i, 32 * j)
+			end
+		end
+	end
+	love.graphics.setCanvas()
+
 	audio.setup()
 	love.audio.setVolume(0.3)
 
@@ -84,7 +97,7 @@ function love.load()
 	shots = {}
 	sparks = {}
 
-	spawn(3)
+	spawn(7)
 end
 
 function love.update(dt)
@@ -124,6 +137,12 @@ end
 function love.draw()
 	if game_state == "pause" then
 		love.graphics.setShader(shaderDesaturate)
+	end
+
+	for i = -1, math.floor(window.w / 256) do
+		for j = -1, math.floor(window.h / 256) do
+			love.graphics.draw(parallax_canvas, math.floor(((-camera.x * 0.5) % 256) + 256 * i), math.floor(((-camera.y * 0.5) % 256) + 256 * j))
+		end
 	end
 
 	img.update_tileset_batch()
@@ -175,7 +194,7 @@ function love.draw()
 	love.graphics.print("draws: "..dc.drawcalls, 20, window.h - 60)
 	love.graphics.print(map.grid_at_pos(mouse.x + camera.x)..", "..map.grid_at_pos(mouse.y + camera.y), 20, window.h - 40)
 
-	physics.map_collision_test(player)
+	-- physics.map_collision_test(player)
 
 	if game_state == "pause" then
 		love.graphics.setShader()

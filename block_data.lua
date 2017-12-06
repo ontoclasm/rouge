@@ -24,6 +24,7 @@ block_data["air"] =
 	breakable = false,
 	collision_type = "empty",
 	slope = false,
+	invisible = true,
 }
 
 block_data["wall"] =
