@@ -23,9 +23,16 @@ function shot:update(dt)
 	end
 
 	-- collide: first with tiles, then mobs
-	hit, mx, my, mt, nx, ny = physics.map_collision_aabb_sweep(self, self.dx * dt, self.dy * dt)
+	if self.collides_with_terrain then
+		hit, mx, my, mt, nx, ny = physics.map_collision_aabb_sweep(self, self.dx * dt, self.dy * dt)
+	else
+		hit = nil
+		mx, my = self.x + self.dx * dt, self.y + self.dy * dt
+		mt = 1
+		nx, ny = 0, 0
+	end
 
-	if self.damage then
+	if self.collides_with_actors then
 		if self.faction == "player" then
 			for j,z in pairs(enemies) do
 				-- if math.abs(self.x - z.x) <= 64 and math.abs(self.y - z.y) <= 64 then
@@ -50,33 +57,7 @@ function shot:update(dt)
 
 	-- now, if we hit something, react
 	if hit then
-		if hit[1] == "block" then
-			if mainmap:block_at(hit[2], hit[3]) == "void" then
-					self:die(true)
-			elseif self.bounces and self.bounces > 0 then
-				-- reflect off
-				local dot = self.dy * ny + self.dx * nx
-
-				self.dx = (self.dx - 2 * dot * nx) * self.bounce_restitution
-				self.dy = (self.dy - 2 * dot * ny) * self.bounce_restitution
-
-				self.bounces = self.bounces - 1
-			elseif self.damage then
-				mainmap:hurt_block(hit[2], hit[3], self.damage)
-				self:die()
-				audio.play('hit2')
-			end
-		elseif hit[1] == "enemy" then
-			enemies[hit[2]]:hurt(self.damage)
-			self:die()
-			audio.play('hit1')
-			camera.shake(10)
-		elseif hit[1] == "player" then
-			player:hurt(self.damage)
-			self:die()
-			audio.play('hit1')
-			camera.shake(10)
-		end
+		self:collide(hit, mx, my, mt, nx, ny)
 	end
 end
 
