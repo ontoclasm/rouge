@@ -58,4 +58,11 @@ spark_data["chunk"] =
 	gravity_multiplier = 0.5,
 }
 
+spark_data["explosion"] =
+{
+	class = "explosion",
+	sprite = "explosion", center_x = 32, center_y = 32,
+	duration = 0.2
+}
+
 return spark_data

@@ -82,14 +82,7 @@ end
 
 function shot:die(silent)
 	if not silent then
-		spark_data.spawn("tripop", self.color, self.x, self.y,
-						 0, 0, math.pi * love.math.random(0,1) / 2, -1 + 2 * love.math.random(0,1), -1 + 2 * love.math.random(0,1))
-		for i=1,5 do
-			angle = love.math.random() * math.pi * 2
-			v = 200 + 200 * love.math.random()
-			spark_data.spawn("spark", self.color, self.x, self.y,
-							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
-		end
+		self:explode()
 	end
 	shots[self.id] = nil
 end

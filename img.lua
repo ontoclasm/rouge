@@ -58,6 +58,10 @@ function img.setup()
 	img.nq("spark",				 0,	11)
 	img.nq("chunk",				 1,	11)
 
+	img.tile["explosion"] = {n = 2}
+	img.tile["explosion"][1] = love.graphics.newQuad(0, 448, 64, 64, img.tileset:getWidth(), img.tileset:getHeight())
+	img.tile["explosion"][2] = love.graphics.newQuad(64, 448, 64, 64, img.tileset:getWidth(), img.tileset:getHeight())
+
 	img.view_tilewidth = math.ceil(window.w / img.tile_size)
 	img.view_tileheight = math.ceil(window.h / img.tile_size)
 

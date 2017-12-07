@@ -22,7 +22,7 @@ weapon_data["default"] =
 	shot_speed = 1100, shot_speed_variance = 200, cooldown = 0.10, recoil = 3, kick = 50,
 	cof_min = 0, cof_max = 10, cof_growth = 10,
 
-	["fire"] = function(self, owner, t_x, t_y)
+	fire = function(self, owner, t_x, t_y)
 		local angle = math.atan2(t_y - owner.y, t_x - owner.x)
 
 		local shot_angle = mymath.random_spread(angle, owner.cof)
@@ -59,7 +59,7 @@ weapon_data["plasma"] =
 	shot_speed = 300, shot_speed_distance_scaling = 1.2, shot_speed_max = 700, cooldown = 1, recoil = 30, kick = 218,
 	cof_min = 5, cof_max = 40, cof_growth = 25,
 
-	["fire"] = function(self, owner, t_x, t_y)
+	fire = function(self, owner, t_x, t_y)
 		local angle = math.atan2(t_y - owner.y, t_x - owner.x)
 
 		local shot_angle = mymath.random_spread(angle, owner.cof)
@@ -74,13 +74,6 @@ weapon_data["plasma"] =
 		if owner.cof_factor < 100 then
 			owner.cof_factor = math.min(100, owner.cof_factor + self.cof_growth)
 		end
-
-		-- XXX recoil by messing up the player's aim? feels odd
-		-- if owner.class == "player" then
-		-- 	local recoil_angle = math.pi * (-1 + love.math.random())
-		-- 	love.mouse.setPosition(mouse.x + owner.weapon.recoil * math.cos(recoil_angle),
-		-- 						   mouse.y + owner.weapon.recoil * math.sin(recoil_angle))
-		-- end
 
 		-- kick in the opposite direction. kick vertically only if airborne
 		owner.dx = owner.dx - self.kick * math.cos(angle)
@@ -104,7 +97,7 @@ weapon_data["shotgun"] =
 	shot_speed = 300, shot_speed_variance = 500, shot_count = 8, cooldown = 0.60, recoil = 40, kick = 218,
 	cof_min = 15, cof_max = 15, cof_growth = 0,
 
-	["fire"] = function(self, owner, t_x, t_y)
+	fire = function(self, owner, t_x, t_y)
 		local angle = math.atan2(t_y - owner.y, t_x - owner.x)
 
 		for k = 1, self.shot_count do
@@ -120,13 +113,6 @@ weapon_data["shotgun"] =
 		if owner.cof_factor < 100 then
 			owner.cof_factor = math.min(100, owner.cof_factor + self.cof_growth)
 		end
-
-		-- XXX recoil by messing up the player's aim? feels odd
-		-- if owner.class == "player" then
-		-- 	local recoil_angle = math.pi * (-1 + love.math.random())
-		-- 	love.mouse.setPosition(mouse.x + owner.weapon.recoil * math.cos(recoil_angle),
-		-- 						   mouse.y + owner.weapon.recoil * math.sin(recoil_angle))
-		-- end
 
 		-- kick in the opposite direction. kick vertically only if airborne
 		owner.dx = owner.dx - self.kick * math.cos(angle)
