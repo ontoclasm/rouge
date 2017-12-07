@@ -269,7 +269,7 @@ function actor:fire(t_x, t_y)
 
 	for k = 1, (self.weapon.shot_count or 1) do
 		local shot_angle = mymath.random_spread(angle, self.cof)
-		local shot_speed = self.weapon.shot_speed + (self.weapon.shot_speed_range * (2 * love.math.random() - 1))
+		local shot_speed = self.weapon.shot_speed + self.weapon.shot_speed_variance * love.math.random()
 
 		shot_data.spawn(self.weapon.shot, self.x, self.y,
 		                shot_speed * math.cos(shot_angle), shot_speed * math.sin(shot_angle),

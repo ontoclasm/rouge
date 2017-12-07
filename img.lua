@@ -47,12 +47,16 @@ function img.setup()
 	img.nq("tripop",			 2,	 9)
 	img.nq("tripop",			 3,	 9)
 
-	img.nq("bullet_45",			 0,	10)
+	img.nq("bullet_0",			 0,	10)
 	img.nq("bullet_23",			 1,	10)
-	img.nq("bullet_0",			 2,	10)
+	img.nq("bullet_45",			 2,	10)
 
-	img.nq("spark",				 3,	10)
-	img.nq("chunk",				 4,	10)
+	img.nq("plasma_0",			 3,	10)
+	img.nq("plasma_23",			 4,	10)
+	img.nq("plasma_45",			 5,	10)
+
+	img.nq("spark",				 0,	11)
+	img.nq("chunk",				 1,	11)
 
 	img.view_tilewidth = math.ceil(window.w / img.tile_size)
 	img.view_tileheight = math.ceil(window.h / img.tile_size)
@@ -117,6 +121,110 @@ function img.update_tileset_batch()
 		tileset_batch_old_x, tileset_batch_old_y = new_x, new_y
 		redraw = false
 	end
+end
+
+local rotational_sprite_functions = {
+	[0] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_0"][frame],
+						   x, y, 0, 1, 1,
+						   16, 16)
+	end,
+
+	[1] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, 0, 1, 1,
+						   16, 16)
+	end,
+
+	[2] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_45"][frame],
+						   x, y, 0, 1, 1,
+						   16, 16)
+	end,
+
+	[3] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, math.pi / 2, 1, -1,
+						   16, 16)
+	end,
+
+	[4] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_0"][frame],
+						   x, y, math.pi / 2, 1, 1,
+						   16, 16)
+	end,
+
+	[5] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, math.pi / 2, 1, 1,
+						   16, 16)
+	end,
+
+	[6] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_45"][frame],
+						   x, y, math.pi / 2, 1, 1,
+						   16, 16)
+	end,
+
+	[7] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, 0, -1, 1,
+						   16, 16)
+	end,
+
+	[8] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_0"][frame],
+						   x, y, 0, -1, 1,
+						   16, 16)
+	end,
+
+	[9] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, math.pi, 1, 1,
+						   16, 16)
+	end,
+
+	[10] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_45"][frame],
+						   x, y, math.pi, 1, 1,
+						   16, 16)
+	end,
+
+	[11] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, math.pi / 2, -1, 1,
+						   16, 16)
+	end,
+
+	[12] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_0"][frame],
+						   x, y, - math.pi / 2, 1, 1,
+						   16, 16)
+	end,
+
+	[13] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, - math.pi / 2, 1, 1,
+						   16, 16)
+	end,
+
+	[14] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_45"][frame],
+						   x, y, - math.pi / 2, 1, 1,
+						   16, 16)
+	end,
+
+	[15] = function(name, frame, x, y)
+		love.graphics.draw(img.tileset, img.tile[name .. "_23"][frame],
+						   x, y, 0, 1, -1,
+						   16, 16)
+	end
+}
+
+function img.draw_rotational_sprite(name, frame, x, y, angle)
+	angle = (mymath.round(angle * 8 / math.pi)) % 16 -- remember y+ (i.e. pi/2) is DOWN :suicide:
+
+	rotational_sprite_functions[angle](name, frame, x, y)
 end
 
 return img

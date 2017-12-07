@@ -96,40 +96,8 @@ end
 
 function shot:draw()
 	love.graphics.setColor(self.color)
-	angle = (mymath.round(math.atan2(self.dy, self.dx) * 8 / math.pi)) % 8 -- remember y+ (i.e. pi/2) is DOWN :suicide:
-	if angle == 0 or angle == 8 then
-		love.graphics.draw(img.tileset, img.tile["bullet_0"][1],
-						   camera.view_x(self), camera.view_y(self), 0, 1, 1,
-						   16, 16)
-	elseif angle == 1 then
-		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   camera.view_x(self), camera.view_y(self), 0, 1, 1,
-						   16, 16)
-	elseif angle == 2 then
-		love.graphics.draw(img.tileset, img.tile["bullet_45"][1],
-						   camera.view_x(self), camera.view_y(self), 0, 1, 1,
-						   16, 16)
-	elseif angle == 3 then
-		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   camera.view_x(self), camera.view_y(self), math.pi / 2, -1, 1,
-						   16, 16)
-	elseif angle == 4 then
-		love.graphics.draw(img.tileset, img.tile["bullet_0"][1],
-						   camera.view_x(self), camera.view_y(self), math.pi / 2, 1, 1,
-						   16, 16)
-	elseif angle == 5 then
-		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   camera.view_x(self), camera.view_y(self), math.pi / 2, 1, 1,
-						   16, 16)
-	elseif angle == 6 then
-		love.graphics.draw(img.tileset, img.tile["bullet_45"][1],
-						   camera.view_x(self), camera.view_y(self), math.pi / 2, 1, 1,
-						   16, 16)
-	elseif angle == 7 then
-		love.graphics.draw(img.tileset, img.tile["bullet_23"][1],
-						   camera.view_x(self), camera.view_y(self), 0, 1, -1,
-						   16, 16)
-	end
+
+	img.draw_rotational_sprite(self.sprite, 1, camera.view_x(self), camera.view_y(self), math.atan2(self.dy, self.dx))
 end
 
 return shot
