@@ -252,7 +252,7 @@ function actor:update_weapon(dt)
 		if not self:check_status("reload") and (self.weapon.ammo == 0 or self.controls.reload) then
 			self:reload()
 		elseif self.controls.fire_1 and not self:check_status("reload") then
-			self:fire(self.controls.aim_x, self.controls.aim_y);
+			self.weapon:fire(self, self.controls.aim_x, self.controls.aim_y);
 		elseif self.cof_factor > 0 then
 			self.cof_factor = math.max(0, self.cof_factor - 200 * dt)
 		end
@@ -262,42 +262,6 @@ function actor:update_weapon(dt)
 	end
 
 	self.controls.swap_weapons = false
-end
-
-function actor:fire(t_x, t_y)
-	local angle = math.atan2(t_y - self.y, t_x - self.x)
-
-	for k = 1, (self.weapon.shot_count or 1) do
-		local shot_angle = mymath.random_spread(angle, self.cof)
-		local shot_speed = self.weapon.shot_speed + self.weapon.shot_speed_variance * love.math.random()
-
-		shot_data.spawn(self.weapon.shot, self.x, self.y,
-		                shot_speed * math.cos(shot_angle), shot_speed * math.sin(shot_angle),
-		                self.name, self.faction)
-	end
-
-	self.shot_cooldown = self.shot_cooldown + self.weapon.cooldown
-	if self.cof_factor < 100 then
-		self.cof_factor = math.min(100, self.cof_factor + self.weapon.cof_growth)
-	end
-
-	-- XXX recoil by messing up the player's aim? feels odd
-	-- if self.class == "player" then
-	-- 	local recoil_angle = math.pi * (-1 + love.math.random())
-	-- 	love.mouse.setPosition(mouse.x + self.weapon.recoil * math.cos(recoil_angle),
-	-- 						   mouse.y + self.weapon.recoil * math.sin(recoil_angle))
-	-- end
-
-	-- kick in the opposite direction. kick vertically only if airborne
-	self.dx = self.dx - self.weapon.kick * math.cos(angle)
-	if not self.touching_floor then self.dy = self.dy - self.weapon.kick * math.sin(angle) end
-
-	self.weapon.ammo = self.weapon.ammo - 1
-
-	audio.play(self.weapon.sfx_fire)
-	if self.class == "player" then
-		camera.shake(5, angle)
-	end
 end
 
 function actor:reload()
