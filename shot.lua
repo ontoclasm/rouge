@@ -35,13 +35,13 @@ function shot:update(dt)
 	if self.collides_with_actors then
 		if self.faction == "player" then
 			for j,z in pairs(enemies) do
-				-- if math.abs(self.x - z.x) <= 64 and math.abs(self.y - z.y) <= 64 then
-				hx, hy, ht = physics.collision_aabb_sweep(self, z, self.dx * dt, self.dy * dt)
-				if ht and ht < mt then
-					hit = {"enemy", j}
-					mt, mx, my = ht, hx, hy
+				if math.abs(self.x - z.x) <= 64 and math.abs(self.y - z.y) <= 64 then
+					hx, hy, ht = physics.collision_aabb_sweep(self, z, self.dx * dt, self.dy * dt)
+					if ht and ht < mt then
+						hit = {"enemy", j}
+						mt, mx, my = ht, hx, hy
+					end
 				end
-				-- end
 			end
 		elseif self.faction == "enemy" then
 			hx, hy, ht = physics.collision_aabb_sweep(self, player, self.dx * dt, self.dy * dt)
