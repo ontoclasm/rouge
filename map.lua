@@ -194,10 +194,11 @@ function map:print(m, px, py)
 end
 
 function map:tileframe_at(x,y)
-	if self:block_at(x,y) == "wall" then
+	if block_data[self:block_at(x,y)].breakable then
 		local hp = self[x][y].hp
-		if hp > 40 then return 1
-		elseif hp > 20 then return 2
+		local max_hp = block_data[self:block_at(x,y)].hp
+		if hp > max_hp * 0.6667 then return 1
+		elseif hp > max_hp * 0.3334 then return 2
 		else return 3
 		end
 	else

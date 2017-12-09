@@ -29,7 +29,7 @@ block_data["air"] =
 
 block_data["wall"] =
 {
-	hp = 60,
+	hp = 180,
 	breakable = true,
 	collision_type = "solid",
 	slope = false,
@@ -37,8 +37,8 @@ block_data["wall"] =
 
 block_data["slope_45"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 120,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = -1,
@@ -47,8 +47,8 @@ block_data["slope_45"] =
 
 block_data["slope_-45"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 120,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = true, r = false},
 	slope = 1,
@@ -57,8 +57,8 @@ block_data["slope_-45"] =
 
 block_data["slope_45_a"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 60,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = false, l = false, r = false},
 	slope = -1,
@@ -68,8 +68,8 @@ block_data["slope_45_a"] =
 
 block_data["slope_45_b"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 120,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = -1,
@@ -78,8 +78,8 @@ block_data["slope_45_b"] =
 
 block_data["slope_-45_a"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 60,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = false, l = false, r = false},
 	slope = 1,
@@ -89,8 +89,8 @@ block_data["slope_-45_a"] =
 
 block_data["slope_-45_b"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 120,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = true, r = false},
 	slope = 1,
@@ -100,8 +100,8 @@ block_data["slope_-45_b"] =
 -- 23 degree slopes are offset one pixel downwards to avoid jamming the player into a wall in acute corners
 block_data["slope_23_a"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 60,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = false},
 	slope = -0.5,
@@ -111,8 +111,8 @@ block_data["slope_23_a"] =
 
 block_data["slope_23_b"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 120,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = -0.5,
@@ -121,8 +121,8 @@ block_data["slope_23_b"] =
 
 block_data["slope_-23_a"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 60,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = false},
 	slope = 0.5,
@@ -132,8 +132,8 @@ block_data["slope_-23_a"] =
 
 block_data["slope_-23_b"] =
 {
-	hp = 0,
-	breakable = false,
+	hp = 120,
+	breakable = true,
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = true, r = false},
 	slope = 0.5,

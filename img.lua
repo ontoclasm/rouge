@@ -10,24 +10,23 @@ function img.setup()
 
 	img.nq("void",				 0,	 0)
 	img.nq("air",				 1,	 0)
-	img.nq("wall",				 2,	 0)
-	img.nq("wall",				 3,	 0)
-	img.nq("wall",				 4,	 0)
-	img.nq("slope_45",			 5,	 0)
-	img.nq("slope_-45",			 6,	 0)
-	img.nq("slope_45_a",		 7,	 0)
-	img.nq("slope_45_b",		 8,	 0)
-	img.nq("slope_-45_a",		 9,	 0)
-	img.nq("slope_-45_b",		10,	 0)
-	img.nq("slope_23_a",		11,	 0)
-	img.nq("slope_23_b",		12,	 0)
-	img.nq("slope_-23_a",		13,	 0)
-	img.nq("slope_-23_b",		14,	 0)
 
-	img.nq("backdrop",			 0,	 1)
-	img.nq("backdrop",			 1,	 1)
-	img.nq("backdrop",			 2,	 1)
-	img.nq("backdrop",			 3,	 1)
+	img.nq("backdrop",			 2,	 0)
+	img.nq("backdrop",			 3,	 0)
+	img.nq("backdrop",			 4,	 0)
+	img.nq("backdrop",			 5,	 0)
+
+	img.nq_break_block("wall",			 0,  1)
+	img.nq_break_block("slope_45",		 3,  1)
+	img.nq_break_block("slope_-45",		 6,  1)
+	img.nq_break_block("slope_45_a",	 9,  1)
+	img.nq_break_block("slope_45_b",	12,  1)
+	img.nq_break_block("slope_-45_a",	 0,  2)
+	img.nq_break_block("slope_-45_b",	 3,  2)
+	img.nq_break_block("slope_23_a",	 6,  2)
+	img.nq_break_block("slope_23_b",	 9,  2)
+	img.nq_break_block("slope_-23_a",	12,  2)
+	img.nq_break_block("slope_-23_b",	 0,  3)
 
 	img.nq_sprite("player", 	 0,	 4)
 	img.nq_sprite("demon",		 0,	 6)
@@ -81,6 +80,12 @@ function img.nq(name, x, y)
 
 	img.tile[name][img.tile[name].n] = love.graphics.newQuad(x * img.tile_size, y * img.tile_size, img.tile_size, img.tile_size,
 										img.tileset:getWidth(), img.tileset:getHeight())
+end
+
+function img.nq_break_block(name, x, y)
+	for i=0, 3 do
+		img.nq(name, x+i, y)
+	end
 end
 
 function img.nq_sprite(name, x, y)
