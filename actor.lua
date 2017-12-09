@@ -391,7 +391,7 @@ function actor:draw()
 		love.graphics.setColor(self.color)
 	end
 	love.graphics.draw(img.tileset, img.tile[self.sprite .. s .. self.facing][frame],
-					   camera.view_x(self) - 16, camera.view_y(self) - 24)
+					   camera.view_x(self) - 16, camera.view_y(self) - 25)
 
 	if self.anim_last ~= s then
 		self.anim_start = ctime

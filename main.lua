@@ -78,7 +78,7 @@ function love.load()
 	player = actor:new(
 		{
 			class = "player", id = 1, name = "player1", faction = "player",
-			x = 250, y = 250, half_w = 8, half_h = 8,
+			x = 250, y = 250, half_w = 7, half_h = 7,
 			dx = 0, dy = 0,
 			sprite = "player", color = color.rouge, flash_color = color.white, flash_time = 0,
 			facing = 'r', anim_start = ctime,
