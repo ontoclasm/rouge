@@ -55,8 +55,11 @@ function img.setup()
 	img.nq("plasma_23",			 4,	10)
 	img.nq("plasma_45",			 5,	10)
 
-	img.nq("spark",				 0,	11)
-	img.nq("chunk",				 1,	11)
+	img.nq("spark_s",				 0,	11)
+	img.nq("spark_m",				 1,	11)
+	img.nq("spark_l",				 2,	11)
+	img.nq("chunk_s",				 3,	11)
+	img.nq("chunk_m",				 4,	11)
 
 	img.tile["explosion"] = {n = 2}
 	img.tile["explosion"][1] = love.graphics.newQuad(0, 448, 64, 64, img.tileset:getWidth(), img.tileset:getHeight())

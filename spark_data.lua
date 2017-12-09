@@ -40,22 +40,46 @@ spark_data["tripop"] =
 	duration = 0.4
 }
 
-spark_data["spark"] =
+spark_data["spark_s"] =
 {
-	class = "spark",
-	sprite = "spark", center_x = 16, center_y = 16,
-	duration = 0.2,
-	duration_variance = 0.5,
-	gravity_multiplier = 0.3,
+	class = "spark_s",
+	sprite = "spark_s", center_x = 16, center_y = 16,
+	duration = 0.1,
+	duration_variance = 0.3,
 }
 
-spark_data["chunk"] =
+spark_data["spark_m"] =
 {
-	class = "chunk",
-	sprite = "chunk", center_x = 16, center_y = 16,
-	duration = 0.5,
+	class = "spark_m",
+	sprite = "spark_m", center_x = 16, center_y = 16,
+	duration = 0.1,
+	duration_variance = 0.3,
+}
+
+spark_data["spark_l"] =
+{
+	class = "spark_l",
+	sprite = "spark_l", center_x = 16, center_y = 16,
+	duration = 0.1,
+	duration_variance = 0.3,
+}
+
+spark_data["chunk_s"] =
+{
+	class = "chunk_s",
+	sprite = "chunk_s", center_x = 16, center_y = 16,
+	duration = 0.3,
 	duration_variance = 0.5,
-	gravity_multiplier = 0.5,
+	gravity_multiplier = 0.6
+}
+
+spark_data["chunk_m"] =
+{
+	class = "chunk_m",
+	sprite = "chunk_m", center_x = 16, center_y = 16,
+	duration = 0.3,
+	duration_variance = 0.5,
+	gravity_multiplier = 0.6
 }
 
 spark_data["explosion"] =

@@ -105,7 +105,7 @@ block_data["slope_23_a"] =
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = false},
 	slope = -0.5,
-	slope_y_offset = 9,
+	slope_y_offset = 8,
 	box_half_multipliers = { u = 0, d = 1, l = 1, r = 1 },
 }
 
@@ -116,7 +116,7 @@ block_data["slope_23_b"] =
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = true},
 	slope = -0.5,
-	slope_y_offset = -7,
+	slope_y_offset = -8,
 }
 
 block_data["slope_-23_a"] =
@@ -126,7 +126,7 @@ block_data["slope_-23_a"] =
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = false, r = false},
 	slope = 0.5,
-	slope_y_offset = 9,
+	slope_y_offset = 8,
 	box_half_multipliers = { u = 0, d = 1, l = 1, r = 1 },
 }
 
@@ -137,7 +137,7 @@ block_data["slope_-23_b"] =
 	collision_type = "slope",
 	collision_dirs = { u = false, d = true, l = true, r = false},
 	slope = 0.5,
-	slope_y_offset = -7,
+	slope_y_offset = -8,
 }
 
 return block_data

@@ -35,16 +35,18 @@ shot_data["pellet"] =
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
 					self:die(true)
-			elseif mymath.one_chance_in(3) then
-				-- reflect off
-				local dot = self.dy * ny + self.dx * nx
-
-				self.dx = (self.dx - 2 * dot * nx) * self.bounce_restitution
-				self.dy = (self.dy - 2 * dot * ny) * self.bounce_restitution
 			else
-				mainmap:hurt_block(hit[2], hit[3], self.damage)
-				self:die()
-				audio.play('hit2')
+				-- reflect off, maybe
+				-- chance is based on the angle of incidence
+				local dot = self.dy * ny + self.dx * nx
+				if (love.math.random() * math.pi) < 2 * math.abs(math.acos(dot / mymath.vector_length(self.dx, self.dy)) - math.pi) - 0.2 then
+					self.dx = (self.dx - 2 * dot * nx) * self.bounce_restitution
+					self.dy = (self.dy - 2 * dot * ny) * self.bounce_restitution
+				else
+					mainmap:hurt_block(hit[2], hit[3], self.damage)
+					self:die()
+					audio.play('hit2')
+				end
 			end
 		elseif hit[1] == "enemy" then
 			enemies[hit[2]]:hurt(self.damage)
@@ -65,7 +67,7 @@ shot_data["pellet"] =
 		for i=1,5 do
 			angle = love.math.random() * math.pi * 2
 			v = 200 + 200 * love.math.random()
-			spark_data.spawn("spark", self.color, self.x, self.y,
+			spark_data.spawn("spark_s", self.color, self.x, self.y,
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
 	end
@@ -139,10 +141,24 @@ shot_data["plasma"] =
 
 		spark_data.spawn("explosion", self.color, self.x, self.y,
 						 0, 0, math.pi * love.math.random(0,1) / 2, -1 + 2 * love.math.random(0,1), -1 + 2 * love.math.random(0,1))
-		for i=1,20 do
+		for i=1,14 do
 			angle = love.math.random() * math.pi * 2
-			v = 200 + 200 * love.math.random()
-			spark_data.spawn("spark", self.color, self.x, self.y,
+			v = 100 + 500 * love.math.random()
+			spark_data.spawn("spark_s", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
+
+		for i=1,7 do
+			angle = love.math.random() * math.pi * 2
+			v = 80 + 400 * love.math.random()
+			spark_data.spawn("spark_m", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
+
+		for i=1,4 do
+			angle = love.math.random() * math.pi * 2
+			v = 50 + 300 * love.math.random()
+			spark_data.spawn("spark_l", self.color, self.x, self.y,
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
 	end
@@ -185,7 +201,7 @@ shot_data["buckshot"] =
 		for i=1,5 do
 			angle = love.math.random() * math.pi * 2
 			v = 200 + 200 * love.math.random()
-			spark_data.spawn("spark", self.color, self.x, self.y,
+			spark_data.spawn("spark_s", self.color, self.x, self.y,
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
 	end
