@@ -327,11 +327,23 @@ end
 
 function actor:die()
 	if self.class == "player" then
+		for i=1,12 do
+			angle = love.math.random() * math.pi * 2
+			v = 200 + 200 * love.math.random()
+			spark_data.spawn("spark_m", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
 		-- love.event.push("quit") -- rip 2017
 		self.x, self.y = 250, 250
 		self.dx, self.dy = 0,0
 		self.hp = 1000 -- debug. cheater
 	else
+		for i=1,6 do
+			angle = love.math.random() * math.pi * 2
+			v = 200 + 200 * love.math.random()
+			spark_data.spawn("spark_m", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
 		enemies[self.id] = nil
 	end
 end

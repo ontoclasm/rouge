@@ -76,7 +76,7 @@ shot_data["pellet"] =
 shot_data["plasma"] =
 {
 	class = "plasma", name = "Plasma Sphere",
-	damage = 120,
+	damage = 240,
 	color = color.yellow,
 	sprite = "plasma",
 	half_w = 6, half_h = 6,
@@ -124,16 +124,16 @@ shot_data["plasma"] =
 			end
 		elseif self.faction == "enemy" then
 			dist = mymath.dist(player.x, player.y, self.x, self.y)
-			if dist < 64 then
-				player:hurt(self.damage * (64 - dist) / 64)
+			if dist < 128 then
+				player:hurt(self.damage * (128 - dist) / 128)
 			end
 		end
 
 		for i = map.grid_at_pos(self.x) - 3, map.grid_at_pos(self.x) + 3 do
 			for j = map.grid_at_pos(self.y) - 3, map.grid_at_pos(self.y) + 3 do
 				dist = mymath.dist(img.tile_size * (i + 0.5), img.tile_size * (j + 0.5), self.x, self.y)
-				if dist < 64 then
-					mainmap:hurt_block(i, j, self.damage * (64 - dist) / 64)
+				if dist < 128 then
+					mainmap:hurt_block(i, j, self.damage * (128 - dist) / 128)
 				end
 			end
 		end
