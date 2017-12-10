@@ -217,10 +217,11 @@ function physics.map_collision_aabb_sweep(a, vx, vy)
 				block_type = mainmap:block_at(i, j)
 				box = map.bounding_box(i, j)
 
-				-- we treat slope_23_b as a solid block if it has a block above it
+				-- we used to treat slope_23_b (and slope 45_b maybe?) as a solid block if it has a block above it
 				-- to avoid jamming the player through the floor in acute corners
-				if block_data[block_type].slope and not
-					(mainmap:grid_has_collision(i, j-1) and (block_type == "slope_23_b" or block_type == "slope_-23_b")) then
+				-- this seems obsolete now, but:
+				-- and not (mainmap:grid_has_collision(i, j-1) and (block_type == "slope_23_b" or block_type == "slope_-23_b"))
+				if block_data[block_type].slope then
 					hx, hy, ht, nx, ny = physics.collision_aabb_sweep_slope(
 						a, box, vx, vy,
 						block_data[block_type].slope, block_data[block_type].slope_y_offset,
