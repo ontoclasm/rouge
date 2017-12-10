@@ -52,7 +52,7 @@ function love.load()
 	mainmap = map:new(48, 32)
 	mainmap:fill_main()
 
-	nextpiece = map.parse_map_file("maps/hi.txt", 7, 7)
+	nextpiece = files.parse_map_file("maps/hi.txt", 7, 7)
 
 	img.setup()
 
