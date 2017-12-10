@@ -81,7 +81,7 @@ shot_data["plasma"] =
 	sprite = "plasma",
 	half_w = 6, half_h = 6,
 	gravity_multiplier = 0.6,
-	bounces = 3, bounce_restitution = 0.8,
+	bounces = 2, bounce_restitution = 0.8,
 	collides_with_terrain = true, collides_with_actors = true,
 
 	collide = function(self, hit, mx, my, mt, nx, ny)
