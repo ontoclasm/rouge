@@ -160,7 +160,7 @@ shot_data["plasma"] =
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
 
-		audio.play('hit1')
+		audio.play('explosion')
 		camera.shake(40)
 	end,
 
@@ -286,8 +286,6 @@ shot_data["c4"] =
 		elseif hit[1] == "player" then
 			-- anh, fuck it
 			self:die()
-			audio.play('hit1')
-			camera.shake(40)
 		end
 	end,
 
@@ -341,7 +339,7 @@ shot_data["c4"] =
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
 
-		audio.play('hit1')
+		audio.play('explosion')
 		camera.shake(40)
 	end,
 

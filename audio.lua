@@ -8,6 +8,7 @@ function audio.setup()
 	audio.sfx.dash = love.audio.newSource("sfx/dash.wav", static)
 	audio.sfx.hit1 = love.audio.newSource("sfx/hit1.wav", static)
 	audio.sfx.hit2 = love.audio.newSource("sfx/hit2.wav", static)
+	audio.sfx.explosion = love.audio.newSource("sfx/explosion.wav", static)
 end
 
 function audio.play(sfx)
