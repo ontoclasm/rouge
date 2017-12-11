@@ -71,7 +71,7 @@ function love.load()
 	love.graphics.setCanvas()
 
 	audio.setup()
-	love.audio.setVolume(1)
+	love.audio.setVolume(0.5)
 
 	gravity = 2000
 
