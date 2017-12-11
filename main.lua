@@ -27,6 +27,7 @@ function love.load()
 		x = {'key:r', 'button:x'},
 		y = {'key:t', 'button:y'},
 		r1 = {'mouse:1', 'button:rightshoulder'},
+		r2 = {'mouse:2'},
 		l1 = {'key:space', 'button:leftshoulder'},
 
 		menu = {'key:escape', 'button:start'},
@@ -88,7 +89,7 @@ function love.load()
 			dash_speed = 700, dash_dur = 0.3, dash_cooldown = 0.1,
 			touching_floor = false, double_jumps = 0, double_jumps_max = 2,
 			hp = 1000, status = {},
-			weapon = weapon_data.spawn("default"), weapon2 = weapon_data.spawn("plasma"),
+			weapon = weapon_data.spawn("default"), weapon2 = weapon_data.spawn("c4 launcher"),
 			shot_cooldown = 0, cof = 0, cof_factor = 0
 		})
 

@@ -54,6 +54,10 @@ function img.setup()
 	img.nq("plasma_23",			 4,	10)
 	img.nq("plasma_45",			 5,	10)
 
+	img.nq("c4_0",				 6,	10)
+	img.nq("c4_23",				 7,	10)
+	img.nq("c4_45",				 8,	10)
+
 	img.nq("spark_s",				 0,	11)
 	img.nq("spark_m",				 1,	11)
 	img.nq("spark_l",				 2,	11)

@@ -70,6 +70,10 @@ shot_data["pellet"] =
 			spark_data.spawn("spark_s", self.color, self.x, self.y,
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
+	end,
+
+	facing = function(self)
+		return math.atan2(self.dy, self.dx)
 	end
 }
 
@@ -98,17 +102,11 @@ shot_data["plasma"] =
 				self.bounces = self.bounces - 1
 			elseif self.damage then
 				self:die()
-				audio.play('hit2')
-				camera.shake(25)
 			end
 		elseif hit[1] == "enemy" then
 			self:die()
-			audio.play('hit1')
-			camera.shake(40)
 		elseif hit[1] == "player" then
 			self:die()
-			audio.play('hit1')
-			camera.shake(40)
 		end
 	end,
 
@@ -118,8 +116,8 @@ shot_data["plasma"] =
 		if self.faction == "player" then
 			for j,z in pairs(enemies) do
 				dist = mymath.dist(z.x, z.y, self.x, self.y)
-				if dist < 64 then
-					z:hurt(self.damage * (64 - dist) / 64)
+				if dist < 128 then
+					z:hurt(self.damage * (128 - dist) / 128)
 				end
 			end
 		elseif self.faction == "enemy" then
@@ -161,13 +159,20 @@ shot_data["plasma"] =
 			spark_data.spawn("spark_l", self.color, self.x, self.y,
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
 		end
+
+		audio.play('hit1')
+		camera.shake(40)
+	end,
+
+	facing = function(self)
+		return math.atan2(self.dy, self.dx)
 	end
 }
 
 shot_data["buckshot"] =
 {
 	class = "buckshot", name = "Buckshot Pellet",
-	damage = 10, duration = 0.2, duration_variance = 0.2,
+	damage = 10, duration = 0.2, duration_variance = 0.2, silent_timeout = true,
 	color = color.rouge,
 	sprite = "bullet",
 	half_w = 2, half_h = 2,
@@ -203,6 +208,148 @@ shot_data["buckshot"] =
 			v = 200 + 200 * love.math.random()
 			spark_data.spawn("spark_s", self.color, self.x, self.y,
 							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
+	end,
+
+	facing = function(self)
+		return math.atan2(self.dy, self.dx)
+	end
+}
+
+shot_data["c4"] =
+{
+	class = "c4", name = "Remote Charge",
+	damage = 240, silent_timeout = false,
+	color = color.orange,
+	sprite = "c4",
+	half_w = 2, half_h = 2,
+	gravity_multiplier = 0.6,
+	collides_with_terrain = true, collides_with_actors = true,
+
+	f = function(self)
+		if self.attach_point then
+			if self.attach_point[1] == "block" then
+				if not mainmap:grid_has_collision(self.attach_point.i, self.attach_point.j) then
+					-- block is gone, fall off
+					local angle = love.math.random() * math.pi * 2
+					local v = 20 + 100 * love.math.random()
+					self.dx = v * math.cos(angle)
+					self.dy = v * math.sin(angle)
+					self.gravity_multiplier = 0.6
+					self.collides_with_actors = true
+					self.collides_with_terrain = true
+					self.attach_point = nil
+				end
+			elseif self.attach_point[1] == "enemy" then
+				if not enemies[self.attach_point.id] then
+					-- enemy is gone, fall off
+					local angle = love.math.random() * math.pi * 2
+					local v = 20 + 100 * love.math.random()
+					self.dx = v * math.cos(angle)
+					self.dy = v * math.sin(angle)
+					self.gravity_multiplier = 0.6
+					self.collides_with_actors = true
+					self.collides_with_terrain = true
+					self.attach_point = nil
+				else
+					self.x = enemies[self.attach_point.id].x + self.attach_point.x_offset
+					self.y = enemies[self.attach_point.id].y + self.attach_point.y_offset
+				end
+			end
+		end
+	end,
+
+	collide = function(self, hit, mx, my, mt, nx, ny)
+		if hit[1] == "block" then
+			if mainmap:block_at(hit[2], hit[3]) == "void" then
+					self:die(true)
+			else
+				-- attach
+				self.attach_point = {"block", i = hit[2], j = hit[3], facing = ((ctime - self.birth_time) % 1) * 2 * math.pi}
+				self.dx = 0
+				self.dy = 0
+				self.gravity_multiplier = nil
+				self.collides_with_actors = false
+				self.collides_with_terrain = false
+
+			end
+		elseif hit[1] == "enemy" then
+			-- attach
+			self.attach_point = {"enemy", id = hit[2],
+								 x_offset = self.x - enemies[hit[2]].x, y_offset = self.y - enemies[hit[2]].y,
+								 facing = ((ctime - self.birth_time) % 1) * 2 * math.pi}
+			self.dx = 0
+			self.dy = 0
+			self.gravity_multiplier = nil
+			self.collides_with_actors = false
+			self.collides_with_terrain = false
+		elseif hit[1] == "player" then
+			-- anh, fuck it
+			self:die()
+			audio.play('hit1')
+			camera.shake(40)
+		end
+	end,
+
+	explode = function(self)
+		local dist
+
+		if self.faction == "player" then
+			for j,z in pairs(enemies) do
+				dist = mymath.dist(z.x, z.y, self.x, self.y)
+				if dist < 128 then
+					z:hurt(self.damage * (128 - dist) / 128)
+				end
+			end
+		elseif self.faction == "enemy" then
+			dist = mymath.dist(player.x, player.y, self.x, self.y)
+			if dist < 128 then
+				player:hurt(self.damage * (128 - dist) / 128)
+			end
+		end
+
+		for i = map.grid_at_pos(self.x) - 3, map.grid_at_pos(self.x) + 3 do
+			for j = map.grid_at_pos(self.y) - 3, map.grid_at_pos(self.y) + 3 do
+				dist = mymath.dist(img.tile_size * (i + 0.5), img.tile_size * (j + 0.5), self.x, self.y)
+				if dist < 128 then
+					mainmap:hurt_block(i, j, self.damage * (128 - dist) / 128)
+				end
+			end
+		end
+
+
+		spark_data.spawn("explosion", self.color, self.x, self.y,
+						 0, 0, math.pi * love.math.random(0,1) / 2, -1 + 2 * love.math.random(0,1), -1 + 2 * love.math.random(0,1))
+		for i=1,14 do
+			angle = love.math.random() * math.pi * 2
+			v = 100 + 500 * love.math.random()
+			spark_data.spawn("spark_s", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
+
+		for i=1,7 do
+			angle = love.math.random() * math.pi * 2
+			v = 80 + 400 * love.math.random()
+			spark_data.spawn("spark_m", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
+
+		for i=1,4 do
+			angle = love.math.random() * math.pi * 2
+			v = 50 + 300 * love.math.random()
+			spark_data.spawn("spark_l", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
+
+		audio.play('hit1')
+		camera.shake(40)
+	end,
+
+	facing = function(self)
+		if self.attach_point then
+			return self.attach_point.facing
+		else
+			return ((ctime - self.birth_time) % 1) * 2 * math.pi
 		end
 	end
 }

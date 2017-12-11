@@ -48,7 +48,9 @@ function actor:update_controls(dt)
 		if controller:pressed('y') then
 			self.controls.swap_weapons = true
 		end
+
 		self.controls.fire_1 = controller:down('r1')
+		self.controls.fire_2 = controller:down('r2')
 
 		if controller:getActiveDevice() == "joystick" then
 			jx = controller:get('r_right') - controller:get('r_left')
@@ -251,8 +253,10 @@ function actor:update_weapon(dt)
 	elseif self.shot_cooldown == 0 then
 		if not self:check_status("reload") and (self.weapon.ammo == 0 or self.controls.reload) then
 			self:reload()
-		elseif self.controls.fire_1 and not self:check_status("reload") then
-			self.weapon:fire(self, self.controls.aim_x, self.controls.aim_y);
+		elseif self.controls.fire_1 and self.weapon.fire_1 and not self:check_status("reload") then
+			self.weapon:fire_1(self, self.controls.aim_x, self.controls.aim_y);
+		elseif self.controls.fire_2 and self.weapon.fire_2 and not self:check_status("reload") then
+			self.weapon:fire_2(self, self.controls.aim_x, self.controls.aim_y);
 		elseif self.cof_factor > 0 then
 			self.cof_factor = math.max(0, self.cof_factor - 200 * dt)
 		end

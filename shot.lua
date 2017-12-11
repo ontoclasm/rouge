@@ -14,7 +14,7 @@ function shot:update(dt)
 
 	if self.duration ~= nil then
 		if ctime > self.birth_time + self.duration then
-			self:die(true)
+			self:die(self.silent_timeout)
 		end
 	end
 
@@ -71,7 +71,7 @@ end
 function shot:draw()
 	love.graphics.setColor(self.color)
 
-	img.draw_rotational_sprite(self.sprite, 1, camera.view_x(self), camera.view_y(self), math.atan2(self.dy, self.dx))
+	img.draw_rotational_sprite(self.sprite, 1, camera.view_x(self), camera.view_y(self), self:facing())
 end
 
 return shot
