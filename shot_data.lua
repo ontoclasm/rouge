@@ -85,23 +85,23 @@ shot_data["plasma"] =
 	sprite = "plasma",
 	half_w = 6, half_h = 6,
 	gravity_multiplier = 0.6,
-	bounces = 2, bounce_restitution = 0.8,
+	bounce_restitution = 0.8,
 	collides_with_terrain = true, collides_with_actors = true,
 
 	collide = function(self, hit, mx, my, mt, nx, ny)
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
 					self:die(true)
-			elseif self.bounces > 0 then
+			else
 				-- reflect off
 				local dot = self.dy * ny + self.dx * nx
 
 				self.dx = (self.dx - 2 * dot * nx) * self.bounce_restitution
 				self.dy = (self.dy - 2 * dot * ny) * self.bounce_restitution
 
-				self.bounces = self.bounces - 1
-			elseif self.damage then
-				self:die()
+				if not self.duration then
+					self.duration = ctime - self.birth_time + 1
+				end
 			end
 		elseif hit[1] == "enemy" then
 			self:die()
@@ -127,8 +127,8 @@ shot_data["plasma"] =
 			end
 		end
 
-		for i = map.grid_at_pos(self.x) - 3, map.grid_at_pos(self.x) + 3 do
-			for j = map.grid_at_pos(self.y) - 3, map.grid_at_pos(self.y) + 3 do
+		for i = map.grid_at_pos(self.x) - 5, map.grid_at_pos(self.x) + 5 do
+			for j = map.grid_at_pos(self.y) - 5, map.grid_at_pos(self.y) + 5 do
 				dist = mymath.dist(img.tile_size * (i + 0.5), img.tile_size * (j + 0.5), self.x, self.y)
 				if dist < 128 then
 					mainmap:hurt_block(i, j, self.damage * (128 - dist) / 128)
@@ -306,8 +306,8 @@ shot_data["c4"] =
 			end
 		end
 
-		for i = map.grid_at_pos(self.x) - 3, map.grid_at_pos(self.x) + 3 do
-			for j = map.grid_at_pos(self.y) - 3, map.grid_at_pos(self.y) + 3 do
+		for i = map.grid_at_pos(self.x) - 5, map.grid_at_pos(self.x) + 5 do
+			for j = map.grid_at_pos(self.y) - 5, map.grid_at_pos(self.y) + 5 do
 				dist = mymath.dist(img.tile_size * (i + 0.5), img.tile_size * (j + 0.5), self.x, self.y)
 				if dist < 128 then
 					mainmap:hurt_block(i, j, self.damage * (128 - dist) / 128)
