@@ -1,7 +1,9 @@
+autobatch = require "autobatch"
+baton = require "baton"
+
 actor = require "actor"
 audio = require "audio"
 ai = require "ai"
-baton = require "baton"
 beam = require "beam"
 camera = require "camera"
 color = require "color"
