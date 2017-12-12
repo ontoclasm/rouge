@@ -231,4 +231,80 @@ weapon_data["missile"] =
 	end
 }
 
+weapon_data["laser"] =
+{
+	class = "laser", name = "Laser Beam", color = color.actinic,
+	sfx_fire = "laser",
+	ammo_max = 100, ammo_glyph = "-", reload_time = 1.5, -- no ammo?
+	cooldown = 0, recoil = 0, kick = 0,
+	cof_min = 0, cof_max = 0, cof_growth = 0,
+	beam_length = 2000, damage = 10,
+
+	fire_1 = function(self, owner, t_x, t_y)
+		local vx = self.beam_length * math.cos(math.atan2(t_y - owner.y, t_x - owner.x))
+		local vy = self.beam_length * math.sin(math.atan2(t_y - owner.y, t_x - owner.x))
+		local box = {x = owner.x, y = owner.y, half_w = 2, half_h = 2}
+		-- local shot_angle = mymath.random_spread(angle, owner.cof)
+
+		--"infinite" line
+		hit, mx, my, mt, nx, ny = physics.map_collision_aabb_sweep(box, vx, vy)
+
+		local hx, hy, ht
+		if owner.faction == "player" then
+			for j,z in pairs(enemies) do
+				hx, hy, ht = physics.collision_aabb_sweep(box, z, vx, vy)
+				if ht and ht < mt then
+					hit = {"enemy", j}
+					mt, mx, my = ht, hx, hy
+				end
+			end
+		elseif owner.faction == "enemy" then
+			hx, hy, ht = physics.collision_aabb_sweep(box, player, vx, vy)
+			if ht and ht < mt then
+				hit = {"player"}
+				mt, mx, my = ht, hx, hy
+			end
+		end
+
+		beam_data.spawn(owner.x, owner.y, mx, my, "actinic", 4, 0.2)
+
+		if hit then
+			if hit[1] == "block" then
+				mainmap:hurt_block(hit[2], hit[3], self.damage)
+			elseif hit[1] == "enemy" then
+				enemies[hit[2]]:hurt(self.damage)
+				camera.shake(10)
+			elseif hit[1] == "player" then
+				player:hurt(self.damage)
+				camera.shake(10)
+			end
+
+			spark_data.spawn("tripop", self.color, mx, my,
+						 0, 0, math.pi * love.math.random(0,1) / 2, -1 + 2 * love.math.random(0,1), -1 + 2 * love.math.random(0,1))
+			for i=1,5 do
+				angle = love.math.random() * math.pi * 2
+				v = 200 + 200 * love.math.random()
+				spark_data.spawn("spark_s", self.color, mx, my,
+								 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+			end
+		end
+
+		owner.shot_cooldown = owner.shot_cooldown + self.cooldown
+		-- if owner.cof_factor < 100 then
+		-- 	owner.cof_factor = math.min(100, owner.cof_factor + self.cof_growth)
+		-- end
+
+		-- kick in the opposite direction. kick vertically only if airborne
+		-- owner.dx = owner.dx - self.kick * math.cos(angle)
+		-- if not owner.touching_floor then owner.dy = owner.dy -self.kick * math.sin(angle) end
+
+		self.ammo = self.ammo - 1
+
+		audio.play(self.sfx_fire)
+		if owner.class == "player" then
+			camera.shake(5, angle)
+		end
+	end
+}
+
 return weapon_data

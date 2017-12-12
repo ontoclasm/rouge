@@ -46,7 +46,7 @@ function love.load()
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
 		"123456789.,!?-+/():;%&`'*#=[]\"")
 	love.graphics.setFont(font)
-	love.graphics.setLineWidth(0)
+	love.graphics.setLineWidth(1)
 
 	game_state = "play"
 
@@ -89,13 +89,14 @@ function love.load()
 			dash_speed = 700, dash_dur = 0.3, dash_cooldown = 0.1,
 			touching_floor = false, double_jumps = 0, double_jumps_max = 2,
 			hp = 1000, status = {},
-			weapon = weapon_data.spawn("default"), weapon2 = weapon_data.spawn("missile"),
+			weapon = weapon_data.spawn("default"), weapon2 = weapon_data.spawn("c4 launcher"),
 			shot_cooldown = 0, cof = 0, cof_factor = 0
 		})
 
 	enemies = {}
 	shots = {}
 	sparks = {}
+	beams = {}
 
 	spawn(7)
 end
@@ -131,6 +132,10 @@ function love.update(dt)
 		for _,v in pairs(sparks) do
 			v:update(dt)
 		end
+
+		for _,v in pairs(beams) do
+			v:update(dt)
+		end
 	end
 end
 
@@ -161,6 +166,10 @@ function love.draw()
 	end
 
 	for _,v in pairs(sparks) do
+		v:draw()
+	end
+
+	for _,v in pairs(beams) do
 		v:draw()
 	end
 
