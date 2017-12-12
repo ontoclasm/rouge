@@ -34,7 +34,7 @@ shot_data["pellet"] =
 	collide = function(self, hit, mx, my, mt, nx, ny)
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
-					self:die(true)
+				self:die(true)
 			else
 				-- reflect off, maybe
 				-- chance is based on the angle of incidence
@@ -91,7 +91,7 @@ shot_data["plasma"] =
 	collide = function(self, hit, mx, my, mt, nx, ny)
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
-					self:die(true)
+				self:die(true)
 			else
 				-- reflect off
 				local dot = self.dy * ny + self.dx * nx
@@ -181,7 +181,7 @@ shot_data["buckshot"] =
 	collide = function(self, hit, mx, my, mt, nx, ny)
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
-					self:die(true)
+				self:die(true)
 			else
 				mainmap:hurt_block(hit[2], hit[3], self.damage)
 				self:die()
@@ -262,7 +262,7 @@ shot_data["c4"] =
 	collide = function(self, hit, mx, my, mt, nx, ny)
 		if hit[1] == "block" then
 			if mainmap:block_at(hit[2], hit[3]) == "void" then
-					self:die(true)
+				self:die(true)
 			else
 				-- attach
 				self.attach_point = {"block", i = hit[2], j = hit[3], facing = ((ctime - self.birth_time) % 1) * 2 * math.pi}
@@ -349,6 +349,75 @@ shot_data["c4"] =
 		else
 			return ((ctime - self.birth_time) % 1) * 2 * math.pi
 		end
+	end
+}
+
+shot_data["missile"] =
+{
+	class = "missile", name = "Homing Missile",
+	damage = 40,
+	color = color.green,
+	sprite = "missile",
+	half_w = 3, half_h = 3,
+	collides_with_terrain = true, collides_with_actors = true,
+	homing_coefficient = 4, cruise_speed = 1000,
+
+	f = function(self, dt)
+		if ctime - self.birth_time > 0.2 then
+			-- turn slowly towards the target
+			local facing = math.atan2(self.dy, self.dx)
+			local theta = 0
+			if self.target_id and enemies[self.target_id] then
+				theta = mymath.angle_difference(facing, math.atan2(enemies[self.target_id].y - self.y, enemies[self.target_id].x - self.x))
+			end
+			local new_speed = mymath.vector_length(self.dx, self.dy) * (1 - dt) + self.cruise_speed * (dt)
+			self.dx = new_speed * math.cos(facing + theta * (math.min(1, self.homing_coefficient * dt)))
+			self.dy = new_speed * math.sin(facing + theta * (math.min(1, self.homing_coefficient * dt)))
+
+			if love.math.random() < 12 * dt then
+				local angle = math.atan2(self.dy, self.dx) + math.pi
+				v = 200 + 200 * love.math.random()
+				spark_data.spawn("spark_s", self.color, self.x, self.y,
+								 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+			end
+		end
+	end,
+
+	collide = function(self, hit, mx, my, mt, nx, ny)
+		if hit[1] == "block" then
+			if mainmap:block_at(hit[2], hit[3]) == "void" then
+				self:die(true)
+			else
+				mainmap:hurt_block(hit[2], hit[3], self.damage)
+				self:die()
+				audio.play('hit2')
+			end
+		elseif hit[1] == "enemy" then
+			enemies[hit[2]]:hurt(self.damage)
+			self:die()
+			audio.play('hit1')
+			camera.shake(10)
+		elseif hit[1] == "player" then
+			player:hurt(self.damage)
+			self:die()
+			audio.play('hit1')
+			camera.shake(10)
+		end
+	end,
+
+	explode = function(self)
+		spark_data.spawn("tripop", self.color, self.x, self.y,
+						 0, 0, math.pi * love.math.random(0,1) / 2, -1 + 2 * love.math.random(0,1), -1 + 2 * love.math.random(0,1))
+		for i=1,5 do
+			angle = love.math.random() * math.pi * 2
+			v = 200 + 200 * love.math.random()
+			spark_data.spawn("spark_s", self.color, self.x, self.y,
+							 v * math.cos(angle), v * math.sin(angle), 0, 1, 1)
+		end
+	end,
+
+	facing = function(self)
+		return math.atan2(self.dy, self.dx)
 	end
 }
 

@@ -2,10 +2,22 @@ local mymath = {}
 
 local dx, dy, v
 
-function mymath.averageAngles(...)
+function mymath.average_angles(...)
 	dx, dy = 0,0
 	for i=1,select('#',...) do local a= select(i,...) x, y = x+math.cos(a), y+math.sin(a) end
 	return math.atan2(y, x)
+end
+
+function mymath.angle_difference(source, target)
+	local a = target - source
+
+	if (a > math.pi) then
+		a = a - math.pi * 2
+	elseif (a < -math.pi) then
+		a = a + math.pi * 2
+	end
+
+	return a
 end
 
 function mymath.clamp(low, n, high) return math.min(math.max(low, n), high) end

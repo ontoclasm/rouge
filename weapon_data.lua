@@ -145,8 +145,8 @@ weapon_data["c4 launcher"] =
 									self.shot_speed_max)
 
 		local shot_id = shot_data.spawn(self.shot, owner.x, owner.y,
-						shot_speed * math.cos(shot_angle), shot_speed * math.sin(shot_angle),
-						owner.name, owner.faction)
+										shot_speed * math.cos(shot_angle), shot_speed * math.sin(shot_angle),
+										owner.name, owner.faction)
 
 		owner.shot_cooldown = owner.shot_cooldown + self.cooldown
 		if owner.cof_factor < 100 then
@@ -175,6 +175,59 @@ weapon_data["c4 launcher"] =
 			end
 		end
 		self.shot_ids = {}
+	end
+}
+
+weapon_data["missile"] =
+{
+	class = "missile", name = "Missile Launcher", color = color.green,
+	shot = "missile",
+	sfx_fire = "gunfire2",
+	ammo_max = 5, ammo_glyph = "I", reload_time = 0.8,
+	shot_speed = 300, cooldown = 0.40, recoil = 30, kick = 218,
+	cof_min = 20, cof_max = 60, cof_growth = 25,
+
+	fire_1 = function(self, owner, t_x, t_y)
+		local angle = math.atan2(t_y - owner.y, t_x - owner.x)
+
+		local shot_angle = mymath.random_spread(angle, owner.cof)
+		local shot_speed = self.shot_speed
+
+		local shot_id = shot_data.spawn(self.shot, owner.x, owner.y,
+										shot_speed * math.cos(shot_angle), shot_speed * math.sin(shot_angle),
+										owner.name, owner.faction)
+
+		-- acquire the target closest to aim point
+		local closest_id = nil
+		local closest_dist = 99999
+		local dist
+		for j,z in pairs(enemies) do
+			dist = mymath.dist(z.x, z.y, t_x, t_y)
+			if dist < closest_dist then
+				closest_id = j
+				closest_dist = dist
+			end
+		end
+
+		if closest_id then
+			shots[shot_id].target_id = closest_id
+		end
+
+		owner.shot_cooldown = owner.shot_cooldown + self.cooldown
+		if owner.cof_factor < 100 then
+			owner.cof_factor = math.min(100, owner.cof_factor + self.cof_growth)
+		end
+
+		-- kick in the opposite direction. kick vertically only if airborne
+		owner.dx = owner.dx - self.kick * math.cos(angle)
+		if not owner.touching_floor then owner.dy = owner.dy -self.kick * math.sin(angle) end
+
+		self.ammo = self.ammo - 1
+
+		audio.play(self.sfx_fire)
+		if owner.class == "player" then
+			camera.shake(5, angle)
+		end
 	end
 }
 

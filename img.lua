@@ -58,6 +58,10 @@ function img.setup()
 	img.nq("c4_23",				 7,	10)
 	img.nq("c4_45",				 8,	10)
 
+	img.nq("missile_0",			 9,	10)
+	img.nq("missile_23",		10,	10)
+	img.nq("missile_45",		11,	10)
+
 	img.nq("spark_s",				 0,	11)
 	img.nq("spark_m",				 1,	11)
 	img.nq("spark_l",				 2,	11)
