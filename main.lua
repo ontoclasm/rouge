@@ -58,10 +58,10 @@ function love.load()
 	img.setup()
 
 	-- set up the parallax background
-	parallax_canvas = love.graphics.newCanvas(256, 256)
+	parallax_canvas = love.graphics.newCanvas(512, 512)
 	love.graphics.setCanvas(parallax_canvas)
-	for i=0, 7 do
-		for j=0, 7 do
+	for i=0, 15 do
+		for j=0, 15 do
 			k = love.math.random(1, 8)
 			if k <= 4 then
 				love.graphics.draw(img.tileset, img.tile["backdrop"][k], 32 * i, 32 * j)
@@ -71,7 +71,7 @@ function love.load()
 	love.graphics.setCanvas()
 
 	audio.setup()
-	love.audio.setVolume(0.5)
+	love.audio.setVolume(0.3)
 
 	gravity = 2000
 
@@ -89,7 +89,7 @@ function love.load()
 			dash_speed = 700, dash_dur = 0.3, dash_cooldown = 0.1,
 			touching_floor = false, double_jumps = 0, double_jumps_max = 2,
 			hp = 1000, status = {},
-			weapon = weapon_data.spawn("default"), weapon2 = weapon_data.spawn("c4 launcher"),
+			weapon = weapon_data.spawn("default"), weapon2 = weapon_data.spawn("plasma"),
 			shot_cooldown = 0, cof = 0, cof_factor = 0
 		})
 
@@ -144,9 +144,9 @@ function love.draw()
 		love.graphics.setShader(shaderDesaturate)
 	end
 
-	for i = -1, math.floor(window.w / 256) do
-		for j = -1, math.floor(window.h / 256) do
-			love.graphics.draw(parallax_canvas, math.floor(((-camera.x * 0.5) % 256) + 256 * i), math.floor(((-camera.y * 0.5) % 256) + 256 * j))
+	for i = -1, math.floor(window.w / 512) do
+		for j = -1, math.floor(window.h / 512) do
+			love.graphics.draw(parallax_canvas, math.floor(((-camera.x * 0.5) % 512) + 512 * i), math.floor(((-camera.y * 0.5) % 512) + 512 * j))
 		end
 	end
 
