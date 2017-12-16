@@ -9,7 +9,7 @@ function love.load()
 	love.window.setMode(window.w, window.h)
 	love.graphics.setBackgroundColor(20, 20, 40)
 
-	shaderDesaturate = love.graphics.newShader("desaturate.lua")
+	shader_desaturate = love.graphics.newShader("desaturate.lua")
 
 	controller = controls.setup()
 
@@ -117,7 +117,7 @@ end
 
 function love.draw()
 	if game_state == "pause" then
-		love.graphics.setShader(shaderDesaturate)
+		love.graphics.setShader(shader_desaturate)
 	end
 
 	for i = -1, math.floor(window.w / 512) do
