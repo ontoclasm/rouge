@@ -1,5 +1,5 @@
-autobatch = require "autobatch"
-baton = require "baton"
+autobatch = require "lib/autobatch"
+baton = require "lib/baton"
 
 actor = require "actor"
 audio = require "audio"
