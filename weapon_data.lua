@@ -236,7 +236,7 @@ weapon_data["laser"] =
 	class = "laser", name = "Laser Beam", color = color.actinic,
 	sfx_fire = "laser",
 	ammo_max = 100, ammo_glyph = "-", reload_time = 1.5, -- no ammo?
-	cooldown = 0, recoil = 0, kick = 0,
+	cooldown = 0.01, recoil = 0, kick = 0,
 	cof_min = 0, cof_max = 0, cof_growth = 0,
 	beam_length = 2000, damage = 10,
 
