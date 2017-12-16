@@ -14,71 +14,9 @@ function actor:update(dt)
 	self:update_location(dt)
 end
 
--- TODO: move player controls elsewhere
-local last_key_dir = { l = 0, r = 0, u = 0, d = 0 } -- left right up down
-local doubletap_time = 0.2 -- time to double-tap
-local aim_distance = 300
 function actor:update_controls(dt)
 	if self.ai.control == "player" then
-		self.controls.x, self.controls.y = 0, 0
-		if controller:down('dp_left') then self.controls.x = self.controls.x - 1 end
-		if controller:down('dp_right') then self.controls.x = self.controls.x + 1 end
-		if controller:down('dp_up') then self.controls.y = self.controls.y - 1 end
-		if controller:down('dp_down') then self.controls.y = self.controls.y + 1 end
-
-		if controller:pressed('dp_left') then
-			if (guitime - last_key_dir.l) < doubletap_time and not player:check_status("dash_cooldown") then
-				player:dash_left()
-			end
-			last_key_dir.l = guitime
-		end
-		if controller:pressed('dp_right') then
-			if (guitime - last_key_dir.r) < doubletap_time and not player:check_status("dash_cooldown") then
-				player:dash_right()
-			end
-			last_key_dir.r = guitime
-		end
-
-		self.controls.jump = controller:pressed('l1')
-		self.controls.float = controller:down('l1')
-
-		if controller:pressed('x') and self.weapon.ammo ~= self.weapon.ammo_max then
-			self.controls.reload = true
-		end
-		if controller:pressed('y') then
-			self.controls.swap_weapons = true
-		end
-
-		self.controls.fire_1 = controller:down('r1')
-		self.controls.fire_2 = controller:down('r2')
-
-		if controller:getActiveDevice() == "joystick" then
-			jx = controller:get('r_right') - controller:get('r_left')
-			jy = controller:get('r_down') - controller:get('r_up')
-			if jx == 0 and jy == 0 then
-				if self.facing == 'r' then
-					mouse = {x = player.x + aim_distance - camera.x,
-							 y = player.y - camera.y}
-				else
-					mouse = {x = player.x - aim_distance - camera.x,
-							 y = player.y - camera.y}
-				end
-			else
-				norm = math.sqrt(jx * jx + jy * jy)
-				mouse = {x = player.x + mymath.round(aim_distance * (jx / norm)) - camera.x,
-						 y = player.y + mymath.round(aim_distance * (jy / norm)) - camera.y}
-			end
-		else
-			mouse = {x = love.mouse.getX(), y = love.mouse.getY()}
-		end
-		self.controls.aim_x, self.controls.aim_y = mouse.x + camera.x, mouse.y + camera.y
-
-		-- face the cursor
-		if self.controls.aim_x >= self.x then
-			self.facing = 'r'
-		else
-			self.facing = 'l'
-		end
+		controls.process(self)
 	elseif self.ai.control == "enemy" then
 		ai.process(self)
 	end

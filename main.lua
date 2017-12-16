@@ -11,31 +11,7 @@ function love.load()
 
 	shaderDesaturate = love.graphics.newShader("desaturate.lua")
 
-	control_bindings = {
-		-- aim controls
-		r_left = {'key:left', 'axis:rightx-'},
-		r_right = {'key:right', 'axis:rightx+'},
-		r_up = {'key:up', 'axis:righty-'},
-		r_down = {'key:down', 'axis:righty+'},
-		-- movement
-		dp_left = {'key:a', 'button:dpleft'},
-		dp_right = {'key:d', 'button:dpright'},
-		dp_up = {'key:w', 'button:dpup'},
-		dp_down = {'key:s', 'button:dpdown'},
-		-- buttons
-		a = {'key:g', 'button:a'},
-		x = {'key:r', 'button:x'},
-		y = {'key:t', 'button:y'},
-		r1 = {'mouse:1', 'button:rightshoulder'},
-		r2 = {'mouse:2'},
-		l1 = {'key:space', 'button:leftshoulder'},
-
-		menu = {'key:escape', 'button:start'},
-		view = {'key:q', 'button:back'},
-	}
-	controller = baton.new(control_bindings) -- set controller.joystick to a Joystick later
-	controller.pairs = {dpad = {'dp_left', 'dp_right', 'dp_up', 'dp_down'}}
-	controller.deadzone = 0.2
+	controller = controls.setup()
 
 	love.mouse.setVisible(false)
 	love.mouse.setGrabbed(true)
@@ -89,7 +65,7 @@ function love.load()
 			dash_speed = 700, dash_dur = 0.3, dash_cooldown = 0.1,
 			touching_floor = false, double_jumps = 0, double_jumps_max = 2,
 			hp = 1000, status = {},
-			weapon = weapon_data.spawn("default"), weapon2 = weapon_data.spawn("plasma"),
+			weapon = weapon_data.spawn("laser"), weapon2 = weapon_data.spawn("missile"),
 			shot_cooldown = 0, cof = 0, cof_factor = 0
 		})
 
