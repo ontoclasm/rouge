@@ -266,7 +266,7 @@ weapon_data["laser"] =
 			end
 		end
 
-		beam_data.spawn(owner.x, owner.y, mx, my, "actinic", 4, 0.2)
+		beam_data.spawn(owner.x, owner.y, mx, my, self.color, 4, 0.2)
 
 		if hit then
 			if hit[1] == "block" then
