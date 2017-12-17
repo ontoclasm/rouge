@@ -22,29 +22,8 @@ function actor:update_controls(dt)
 	end
 end
 
-function actor:is_touching_floor()
-	return (mainmap:can_stand_on_pos(self.x - self.half_w, self.y + self.half_h + 1)
-			or mainmap:can_stand_on_pos(self.x + self.half_w, self.y + self.half_h + 1))
-end
-
-function actor:is_touching_left()
-	return (mainmap:grid_blocks_dir(map.grid_at_pos(self.x - self.half_w - 2), map.grid_at_pos(self.y - self.half_h), 'r')
-			or mainmap:grid_blocks_dir(map.grid_at_pos(self.x - self.half_w - 2), map.grid_at_pos(self.y + self.half_h - 1), 'r'))
-end
-
-function actor:is_touching_right()
-	return (mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.half_w + 1), map.grid_at_pos(self.y - self.half_h), 'l')
-			or mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.half_w + 1), map.grid_at_pos(self.y + self.half_h - 1), 'l'))
-end
-
-function actor:is_on_ledge_left()
-	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x - self.half_w - 8), map.grid_at_pos(self.y + self.half_h + 1), 'u'))
-end
-
-function actor:is_on_ledge_right()
-	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.half_w + 7), map.grid_at_pos(self.y + self.half_h + 1), 'u'))
-end
-
+local hit
+local block_type
 function actor:update_location(dt)
 	if self:check_status("dash_right") then
 		dash_x = 1
@@ -69,14 +48,63 @@ function actor:update_location(dt)
 			if key_x == 0 then
 				self.dx = mymath.abs_subtract(self.dx, self.walk_friction * dt)
 				self.dy = mymath.abs_subtract(self.dy, self.walk_friction * dt)
-			else
-				self.dx = self.dx + (self.walk_accel * key_x * dt)
+			elseif key_x == 1 then
+				-- moving right
+				hit = physics.map_collision_aabb_sweep({x = self.x, y = self.y + self.half_h - 2, half_w = self.half_w, half_h = 2},
+	                                        2, 0)
+				slope_x, slope_y = 1, 0
+				if hit then
+					block_type = mainmap:block_at(hit[2], hit[3])
+					if block_data[block_type].collision_type == "solid" then
+						slope_x = 0
+					elseif block_data[block_type].collision_type == "slope" then
+						if block_data[block_type].slope > 0 then
+							slope_x = 0
+						elseif block_data[block_type].slope == -0.5 then
+							-- sin(atan(1/2)), cos(atan(1/2))
+							slope_x, slope_y = 0.894427, -0.447214
+						elseif block_data[block_type].slope == -1 then
+							-- sin(atan(1)), cos(atan(1))
+							slope_x, slope_y = 0.707107, -0.707107
+						end
+					end
+				end
+				self.dx = self.dx + (self.walk_accel * slope_x * dt)
+				self.dy = self.dy + (self.walk_accel * slope_y * dt)
+			elseif key_x == -1 then
+				-- moving left
+				hit = physics.map_collision_aabb_sweep({x = self.x, y = self.y + self.half_h - 2, half_w = self.half_w, half_h = 2},
+	                                        -2, 0)
+				slope_x, slope_y = -1, 0
+				if hit then
+					block_type = mainmap:block_at(hit[2], hit[3])
+					if block_data[block_type].collision_type == "solid" then
+						slope_x = 0
+					elseif block_data[block_type].collision_type == "slope" then
+						if block_data[block_type].slope < 0 then
+							slope_x = 0
+						elseif block_data[block_type].slope == 0.5 then
+							-- sin(atan(1/2)), cos(atan(1/2))
+							slope_x, slope_y = -0.894427, -0.447214
+						elseif block_data[block_type].slope == 1 then
+							-- sin(atan(1)), cos(atan(1))
+							slope_x, slope_y = -0.707107, -0.707107
+						end
+					end
+				end
+				self.dx = self.dx + (self.walk_accel * slope_x * dt)
+				self.dy = self.dy + (self.walk_accel * slope_y * dt)
 			end
 
 			-- ledge gravity
 			if (self.dx < 0 and key_x ~= -1 and self:is_on_ledge_left()) or (self.dx > 0 and key_x ~= 1 and self:is_on_ledge_right()) then
 				self.dx = mymath.abs_subtract(self.dx, self.walk_friction * dt)
 			end
+
+			-- gravity is lessened, but not zeroed, when on the ground
+			-- i guess??
+			-- this is stupid
+			self.dy = self.dy + (0.4 * gravity * dt)
 
 			if self.controls.jump == true then
 				self:jump()
@@ -163,6 +191,28 @@ function actor:update_location(dt)
 	else
 		self.touching_floor = false
 	end
+end
+
+function actor:is_touching_floor()
+	return physics.map_collision_aabb_sweep(self, 0, 2)
+end
+
+function actor:is_touching_left()
+	return physics.map_collision_aabb_sweep({x = self.x, y = self.y - 2, half_w = self.half_w, half_h = self.half_h - 2},
+											-2, 0)
+end
+
+function actor:is_touching_right()
+	return physics.map_collision_aabb_sweep({x = self.x, y = self.y - 2, half_w = self.half_w, half_h = self.half_h - 2},
+											2, 0)
+end
+
+function actor:is_on_ledge_left()
+	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x - self.half_w - 8), map.grid_at_pos(self.y + self.half_h + 1), 'u'))
+end
+
+function actor:is_on_ledge_right()
+	return (self.touching_floor and not mainmap:grid_blocks_dir(map.grid_at_pos(self.x + self.half_w + 7), map.grid_at_pos(self.y + self.half_h + 1), 'u'))
 end
 
 function actor:jump()

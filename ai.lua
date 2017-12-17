@@ -153,7 +153,7 @@ ai.routines["flyer"] =
 ai.routines["walker"] =
 {
 	ai.actions["bounce off walls"],
-	ai.actions["bounce off ledges"],
+	-- ai.actions["bounce off ledges"],
 	-- ai.actions["shoot player if close"],
 
 	setup = function(a) ai.actions["random direction"](a) end,
