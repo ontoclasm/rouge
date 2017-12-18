@@ -15,7 +15,7 @@ function camera.update(dt)
 		camera.rx = camera.rx - (camera.rx - camera.tx) * dt * 7
 	end
 	if math.abs(camera.ty - camera.ry) >= 2 then
-	camera.ry = camera.ry - (camera.ry - camera.ty) * dt * 7
+		camera.ry = camera.ry - (camera.ry - camera.ty) * dt * 7
 	end
 
 	camera.x, camera.y = math.floor(camera.rx), math.floor(camera.ry)

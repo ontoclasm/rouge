@@ -44,28 +44,25 @@ function actor:update_location(dt)
 
 		if self.touching_floor then
 			-- on the ground
-
 			if key_x == 0 then
 				self.dx = mymath.abs_subtract(self.dx, self.walk_friction * dt)
 				self.dy = mymath.abs_subtract(self.dy, self.walk_friction * dt)
 			elseif key_x == 1 then
 				-- moving right
-				hit = physics.map_collision_aabb_sweep({x = self.x, y = self.y + self.half_h - 2, half_w = self.half_w, half_h = 2},
-	                                        2, 0)
 				slope_x, slope_y = 1, 0
+				hit = physics.map_collision_aabb_sweep({x = self.x, y = self.y + self.half_h - 2, half_w = self.half_w, half_h = 2},
+	                                        0, 2)
 				if hit then
 					block_type = mainmap:block_at(hit[2], hit[3])
-					if block_data[block_type].collision_type == "solid" then
-						slope_x = 0
-					elseif block_data[block_type].collision_type == "slope" then
-						if block_data[block_type].slope > 0 then
-							slope_x = 0
+					if block_data[block_type].collision_type == "slope" then
+						if block_data[block_type].slope == -1 then
+							slope_x, slope_y = 0.707107, 0
 						elseif block_data[block_type].slope == -0.5 then
-							-- sin(atan(1/2)), cos(atan(1/2))
-							slope_x, slope_y = 0.894427, -0.447214
-						elseif block_data[block_type].slope == -1 then
-							-- sin(atan(1)), cos(atan(1))
-							slope_x, slope_y = 0.707107, -0.707107
+							slope_x, slope_y = 0.894427, 0
+						elseif block_data[block_type].slope == 0.5 then
+							slope_x, slope_y = 0.894427, 0.5
+						elseif block_data[block_type].slope == 1 then
+							slope_x, slope_y = 0.707107, 0.8
 						end
 					end
 				end
@@ -73,22 +70,20 @@ function actor:update_location(dt)
 				self.dy = self.dy + (self.walk_accel * slope_y * dt)
 			elseif key_x == -1 then
 				-- moving left
-				hit = physics.map_collision_aabb_sweep({x = self.x, y = self.y + self.half_h - 2, half_w = self.half_w, half_h = 2},
-	                                        -2, 0)
 				slope_x, slope_y = -1, 0
+				hit = physics.map_collision_aabb_sweep({x = self.x, y = self.y + self.half_h - 2, half_w = self.half_w, half_h = 2},
+	                                        0, 2)
 				if hit then
 					block_type = mainmap:block_at(hit[2], hit[3])
-					if block_data[block_type].collision_type == "solid" then
-						slope_x = 0
-					elseif block_data[block_type].collision_type == "slope" then
-						if block_data[block_type].slope < 0 then
-							slope_x = 0
+					if block_data[block_type].collision_type == "slope" then
+						if block_data[block_type].slope == -1 then
+							slope_x, slope_y = -0.707107, 0.8
+						elseif block_data[block_type].slope == -0.5 then
+							slope_x, slope_y = -0.894427, 0.5
 						elseif block_data[block_type].slope == 0.5 then
-							-- sin(atan(1/2)), cos(atan(1/2))
-							slope_x, slope_y = -0.894427, -0.447214
+							slope_x, slope_y = -0.894427, 0
 						elseif block_data[block_type].slope == 1 then
-							-- sin(atan(1)), cos(atan(1))
-							slope_x, slope_y = -0.707107, -0.707107
+							slope_x, slope_y = -0.707107, 0
 						end
 					end
 				end
@@ -104,7 +99,7 @@ function actor:update_location(dt)
 			-- gravity is lessened, but not zeroed, when on the ground
 			-- i guess??
 			-- this is stupid
-			self.dy = self.dy + (0.4 * gravity * dt)
+			-- self.dy = self.dy + (0.6 * gravity * dt)
 
 			if self.controls.jump == true then
 				self:jump()
@@ -132,13 +127,13 @@ function actor:update_location(dt)
 				end
 			end
 		end
-	end
 
-	-- impose soft cap on horiz. speed
-	if self.dx > self.top_speed then
-		self.dx = math.max(self.top_speed, self.dx - 7 * self.dx * dt)
-	elseif self.dx < -self.top_speed then
-		self.dx = math.min(-self.top_speed, self.dx - 7 * self.dx * dt)
+		-- impose soft cap on horiz. speed
+		if self.dx > self.top_speed then
+			self.dx = math.max(self.top_speed * math.abs(slope_x or 1), self.dx - 7 * self.dx * dt)
+		elseif self.dx < -self.top_speed then
+			self.dx = math.min(-self.top_speed * math.abs(slope_x or 1), self.dx - 7 * self.dx * dt)
+		end
 	end
 
 	-- even if we failed to jump, clear the command
