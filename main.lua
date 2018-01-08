@@ -1,8 +1,10 @@
 require "requires"
 
 function love.load()
-	guitime = 0
-	ctime = 0
+	guitime = love.timer.getTime()
+	time_start = guitime
+	ctime = guitime
+	pause_time = 0
 
 	window = {}
 	window.w, window.h = 960, 600
@@ -78,7 +80,7 @@ function love.load()
 end
 
 function love.update(dt)
-	guitime = love.timer.getTime()
+	guitime = love.timer.getTime() - time_start
 
 	-- handle input
 	controller:update()
@@ -90,8 +92,7 @@ function love.update(dt)
 	end
 
 	if game_state == "play" then
-		-- maybe there's a better way to do this
-		ctime = ctime + dt
+		ctime = guitime - pause_time
 
 		camera.update(dt)
 
@@ -172,6 +173,7 @@ function love.draw()
 						20, 40)
 	-- debug msg
 	love.graphics.line(-camera.x + 32, -camera.y + mainmap.death_line, -camera.x +(mainmap.width+1) * 32, -camera.y + mainmap.death_line)
+	love.graphics.print("Time: "..string.format("%.2f", ctime), 20, window.h - 140)
 	love.graphics.print("FPS: "..love.timer.getFPS(), 20, window.h - 120)
 	love.graphics.print("p: "..mymath.round(player.x)..", "..mymath.round(player.y), 20, window.h - 100)
 	love.graphics.print("d: "..mymath.round(player.dx)..", "..mymath.round(player.dy), 20, window.h - 80)
@@ -241,16 +243,18 @@ function counter_string(n, glyph)
 	return string.rep(glyph, n)
 end
 
-local pause_mouse_x, pause_mouse_y
+local pause_mouse_x, pause_mouse_y, pause_start
 
 function pause()
 	game_state = "pause"
 	pause_mouse_x, pause_mouse_y = love.mouse.getPosition()
+	pause_start = guitime
 end
 
 function unpause()
 	game_state = "play"
 	love.mouse.setPosition(pause_mouse_x, pause_mouse_y)
+	pause_time = pause_time + guitime - pause_start
 end
 
 function draw_pause_menu()
