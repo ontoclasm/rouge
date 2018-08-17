@@ -19,7 +19,7 @@ end
 
 function beam:draw()
 	local k = 1 - (ctime - self.birth_time) / self.duration
-	love.graphics.setColor(self.color[1], self.color[2], self.color[3], k * 255)
+	love.graphics.setColor(self.color[1], self.color[2], self.color[3], k)
 	love.graphics.setLineWidth(self.width * k)
 	love.graphics.line(self.x1 - camera.x, self.y1 - camera.y, self.x2 - camera.x, self.y2 - camera.y)
 	love.graphics.setColor(color.white)

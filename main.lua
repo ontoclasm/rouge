@@ -9,7 +9,7 @@ function love.load()
 	window = {}
 	window.w, window.h = 960, 600
 	love.window.setMode(window.w, window.h)
-	love.graphics.setBackgroundColor(20, 20, 40)
+	love.graphics.setBackgroundColor(color.bg)
 
 	shader_desaturate = love.graphics.newShader("desaturate.lua")
 
